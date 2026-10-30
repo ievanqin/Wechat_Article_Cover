@@ -1,4 +1,5 @@
-import { FONT_SETS, THEME_GROUPS } from "./catalog";
+import { SurfacePattern } from "./SurfaceArt";
+import { COMPOSITIONS, WATERMARKS, FONT_SETS, THEME_GROUPS } from "./catalog";
 import { WeChatPreview } from "./WeChatPreview";
 import { LayerPanel } from "./LayerPanel";
 import { classicLayerIds } from "./catalog";
@@ -26,6 +27,23 @@ function readDraft(): Design {
     const v = data?.version === 2 ? data.design : null;
     if (!v || typeof v !== "object") return INITIAL;
     const d = { ...INITIAL };
+    if (
+      COMPOSITIONS.some((c) => c.id === v.composition) ||
+      v.composition === "legacy"
+    )
+      d.composition = v.composition;
+    if (["theme", "solid", "linear", "radial", "mesh"].includes(v.fillMode))
+      d.fillMode = v.fillMode;
+    for (const k of ["fillColor", "gradientColor", "watermarkColor"] as const)
+      if (typeof v[k] === "string" && /^#[0-9a-f]{6}$/i.test(v[k])) d[k] = v[k];
+    if (WATERMARKS.some((w) => w.id === v.watermark)) d.watermark = v.watermark;
+    for (const [k, min, max] of [
+      ["gradientAngle", 0, 360],
+      ["watermarkOpacity", 0, 70],
+      ["watermarkScale", 50, 200],
+    ] as const)
+      if (Number.isFinite(v[k])) d[k] = Math.max(min, Math.min(max, v[k]));
+
     for (const key of [
       "title",
       "subtitle",
@@ -170,9 +188,10 @@ const TABS = [
     id: "layout",
     name: "构图",
     icon: "▦",
-    hint: `${LAYOUTS.length} 种排版灵感`,
+    hint: "实时预览，独立排版",
   },
-  { id: "theme", name: "主题", icon: "◐", hint: "色彩与背景" },
+  { id: "theme", name: "主题", icon: "◐", hint: "主题与元素效果" },
+  { id: "surface", name: "背景", icon: "◒", hint: "底色、渐变与图案" },
   {
     id: "elements",
     name: "元素",
@@ -187,6 +206,35 @@ const categories = [
   { id: "sky", name: "天空" },
   { id: "bottom", name: "前景" },
 ] as const;
+function LayoutPreview({ design }: { design: Design }) {
+  const host = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(170);
+  useEffect(() => {
+    const e = host.current;
+    if (!e) return;
+    const ro = new ResizeObserver(() => setWidth(e.clientWidth));
+    ro.observe(e);
+    return () => ro.disconnect();
+  }, []);
+  return (
+    <div
+      ref={host}
+      className="live-layout-thumb"
+      style={{ height: width * 0.426 }}
+    >
+      <div
+        style={{
+          transform: `scale(${width / 1000})`,
+          transformOrigin: "top left",
+          width: 1000,
+          height: 426,
+        }}
+      >
+        <CoverCanvas design={design} preview />
+      </div>
+    </div>
+  );
+}
 function App() {
   const [history, setHistory] = useState<{
     past: Design[];
@@ -195,6 +243,8 @@ function App() {
   }>(() => ({ past: [], present: readDraft(), future: [] }));
   const d = history.present;
   const [tab, setTab] = useState<Tab>("copy");
+  const [layoutGroup, setLayoutGroup] = useState("全部");
+  const [showAllPalettes, setShowAllPalettes] = useState(false);
   const [familyFilter, setFamilyFilter] = useState<Family | "all">("all");
   const [category, setCategory] =
     useState<(typeof categories)[number]["id"]>("center");
@@ -294,8 +344,8 @@ function App() {
   const palette = PALETTES.find((p) => p.id === d.palette) || PALETTES[0];
   const activeLayout = LAYOUTS.find((l) => l.id === d.layout) || LAYOUTS[0];
   const applyFamily = (family: Family) => {
-    update({ ...PRESETS[family], family });
-    setFamilyFilter(family);
+    const { layout: _layout, ...style } = PRESETS[family];
+    update({ ...style, family, fillMode: "theme", fillColor: "" });
   };
   const toggleMotif = (id: string) => {
     const active = d.elements.includes(id);
@@ -419,7 +469,14 @@ function App() {
     </label>
   );
   const range = (
-    key: "titleSize" | "tracking" | "artOpacity" | "artScale" | "subtitleSize",
+    key:
+      | "titleSize"
+      | "tracking"
+      | "artOpacity"
+      | "artScale"
+      | "subtitleSize"
+      | "watermarkOpacity"
+      | "watermarkScale",
     label: string,
     min: number,
     max: number,
@@ -601,61 +658,68 @@ function App() {
             )}
             {tab === "layout" && (
               <>
-                <label className="catalog-select">
-                  构图风格
-                  <select
-                    aria-label="构图风格"
-                    value={familyFilter}
-                    onChange={(e) =>
-                      setFamilyFilter(e.target.value as Family | "all")
-                    }
-                  >
-                    <option value="all">全部构图 · {LAYOUTS.length}</option>
-                    {FAMILIES.map((f) => (
-                      <option key={f.id} value={f.id}>
-                        {f.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <div className="layout-grid">
-                  {LAYOUTS.filter(
-                    (l) => familyFilter === "all" || l.family === familyFilter,
-                  ).map((l) => (
+                <div className="section-label">
+                  排版方式<span>只调整文字与图形的位置</span>
+                </div>
+                <div className="composition-filters" aria-label="构图分类">
+                  {["全部", "分区", "上下", "居中", "海报"].map((g) => (
                     <button
-                      key={l.id}
-                      className={`layout-card ${d.layout === l.id ? "selected" : ""}`}
-                      aria-pressed={d.layout === l.id}
-                      onClick={() => update({ layout: l.id, family: l.family })}
+                      key={g}
+                      aria-pressed={layoutGroup === g}
+                      onClick={() => setLayoutGroup(g)}
                     >
-                      <div
-                        className={`layout-mini mini-${l.variant} mini-family-${l.family}`}
-                      >
-                        <i />
-                        <span />
-                        <b />
-                        <em />
-                      </div>
-                      <span>
-                        {l.name}
-                        <small>
-                          {d.layout === l.id
-                            ? "✓"
-                            : String(l.variant + 1).padStart(2, "0")}
-                        </small>
-                      </span>
+                      {g}
                     </button>
                   ))}
                 </div>
+                <div className="layout-grid live-layout-grid">
+                  {COMPOSITIONS.filter(
+                    (c) => layoutGroup === "全部" || c.group === layoutGroup,
+                  ).map((c) => (
+                    <button
+                      key={c.id}
+                      aria-label={c.name}
+                      aria-pressed={d.composition === c.id}
+                      className={`layout-card ${d.composition === c.id ? "selected" : ""}`}
+                      onClick={() => update({ composition: c.id })}
+                    >
+                      <LayoutPreview design={{ ...d, composition: c.id }} />
+                      <span>
+                        {c.name}
+                        <small>{d.composition === c.id ? "✓" : ""}</small>
+                      </span>
+                      <p>{c.hint}</p>
+                    </button>
+                  ))}
+                </div>
+                <details className="legacy-layouts">
+                  <summary>经典模板排版 · 保留原版</summary>
+                  <div className="layout-grid live-layout-grid">
+                    {LAYOUTS.filter((l) => l.family === "classic").map((l) => (
+                      <button
+                        key={l.id}
+                        className={`layout-card ${d.composition === "legacy" && d.layout === l.id ? "selected" : ""}`}
+                        onClick={() =>
+                          update({ layout: l.id, composition: "legacy" })
+                        }
+                      >
+                        <LayoutPreview
+                          design={{ ...d, layout: l.id, composition: "legacy" }}
+                        />
+                        <span>{l.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </details>
                 <div className="quiet-note">
-                  只切换构图会保留当前文案、配色和元素。主题页可一键应用整套风格。
+                  缩略图使用当前文案、颜色和元素实时绘制。切换主题会保留所选排版。
                 </div>
               </>
             )}
             {tab === "theme" && (
               <>
                 <div className="section-label">
-                  整套风格<span>组合构图、色彩与意象</span>
+                  主题风格<span>更换色彩与元素，保留排版</span>
                 </div>
                 <label className="theme-search">
                   <input
@@ -812,14 +876,14 @@ function App() {
                   </div>
                 )}
                 <div className="section-label">
-                  视觉表现<span>同样的元素，不同的质感</span>
+                  元素效果<span>颜色、阴影与发光</span>
                 </div>
                 <div className="segmented">
                   {(
                     [
-                      ["line", "清简线描"],
-                      ["painted", "填色浮雕"],
-                      ["luminous", "光影辉光"],
+                      ["line", "无阴影"],
+                      ["painted", "立体阴影"],
+                      ["luminous", "发光效果"],
                     ] as const
                   ).map(([id, name]) => (
                     <button
@@ -831,6 +895,9 @@ function App() {
                     </button>
                   ))}
                 </div>
+                <p className="quiet-note">
+                  调整元素的整体阴影或光晕，元素本身的材质与颜色保留。
+                </p>
                 <label className="ornament-toggle">
                   <input
                     type="checkbox"
@@ -839,18 +906,120 @@ function App() {
                   />
                   装帧增强 · 金线边框、角花与星尘
                 </label>
+              </>
+            )}
+            {tab === "surface" && (
+              <>
                 <div className="section-label">
-                  主题颜色<span>{PALETTES.length} 套可混搭</span>
+                  封面底色<span>纯色或渐变</span>
+                </div>
+                <div className="segmented">
+                  {(
+                    [
+                      ["solid", "纯色"],
+                      ["linear", "线性渐变"],
+                      ["radial", "中心渐变"],
+                      ["mesh", "柔光渐变"],
+                    ] as const
+                  ).map(([id, name]) => (
+                    <button
+                      key={id}
+                      aria-pressed={
+                        d.fillMode === id ||
+                        (id === "solid" && d.fillMode === "theme")
+                      }
+                      onClick={() => update({ fillMode: id })}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+                <div className="fill-colors">
+                  <label>
+                    底色
+                    <input
+                      aria-label="底色"
+                      type="color"
+                      value={d.fillColor || palette.bg}
+                      onChange={(e) =>
+                        update({
+                          fillColor: e.target.value,
+                          fillMode:
+                            d.fillMode === "theme" ? "solid" : d.fillMode,
+                        })
+                      }
+                    />
+                  </label>
+                  {!["theme", "solid"].includes(d.fillMode) && (
+                    <label>
+                      渐变颜色
+                      <input
+                        aria-label="渐变颜色"
+                        type="color"
+                        value={d.gradientColor}
+                        onChange={(e) =>
+                          update({ gradientColor: e.target.value })
+                        }
+                      />
+                    </label>
+                  )}
+                </div>
+                {d.fillMode === "linear" && (
+                  <>
+                    <label className="catalog-select">
+                      渐变方向
+                      <select
+                        aria-label="渐变方向"
+                        value={d.gradientAngle}
+                        onChange={(e) =>
+                          update({ gradientAngle: Number(e.target.value) })
+                        }
+                      >
+                        {[
+                          [0, "向上"],
+                          [45, "右上"],
+                          [90, "向右"],
+                          [135, "右下"],
+                          [180, "向下"],
+                          [225, "左下"],
+                          [270, "向左"],
+                          [315, "左上"],
+                        ].map(([v, n]) => (
+                          <option key={v} value={v}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </>
+                )}
+                <div className="section-label">
+                  配色方案<span>同时搭配文字与元素颜色</span>
                 </div>
                 <div className="palette-grid">
-                  {PALETTES.map((p) => (
+                  {(showAllPalettes
+                    ? PALETTES
+                    : PALETTES.filter(
+                        (p) =>
+                          p.family === d.family ||
+                          p.id === d.palette ||
+                          [
+                            "new-0",
+                            "new-12",
+                            "new-18",
+                            "new-22",
+                            "new-38",
+                            "new-45",
+                          ].includes(p.id),
+                      )
+                  ).map((p) => (
                     <button
                       key={p.id}
                       aria-label={p.name}
                       title={p.name}
                       aria-pressed={d.palette === p.id}
                       className={d.palette === p.id ? "selected" : ""}
-                      onClick={() => update({ palette: p.id })}
+                      onClick={() => update({ palette: p.id, fillColor: "" })}
                     >
                       <span style={{ background: p.bg, color: p.ink }}>
                         <b>Aa</b>
@@ -861,53 +1030,98 @@ function App() {
                     </button>
                   ))}
                 </div>
+                <button
+                  className="catalog-more"
+                  onClick={() => setShowAllPalettes(!showAllPalettes)}
+                >
+                  {showAllPalettes
+                    ? "收起配色"
+                    : "查看全部配色（" + PALETTES.length + "）"}
+                </button>
                 <div className="section-label">
-                  背景肌理<span>{BACKGROUNDS.length} 种 · 全部本地绘制</span>
+                  背景图案<span>淡淡的底纹，不遮住正文</span>
                 </div>
-                <label className="catalog-select">
-                  背景风格
-                  <select
-                    aria-label="背景风格"
-                    value={familyFilter}
-                    onChange={(e) =>
-                      setFamilyFilter(e.target.value as Family | "all")
-                    }
-                  >
-                    <option value="all">全部背景</option>
-                    {FAMILIES.map((f) => (
-                      <option key={f.id} value={f.id}>
-                        {f.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <div className="background-grid">
-                  {BACKGROUNDS.filter(
-                    (b) => familyFilter === "all" || b.family === familyFilter,
-                  ).map((b) => (
+                <div className="watermark-grid">
+                  {WATERMARKS.map((w) => (
                     <button
-                      key={b.id}
-                      aria-pressed={d.background === b.id}
-                      onClick={() => update({ background: b.id })}
-                      className={d.background === b.id ? "selected" : ""}
+                      key={w.id}
+                      aria-pressed={d.watermark === w.id}
+                      onClick={() => update({ watermark: w.id })}
                     >
-                      <span
-                        className={`background-sample pattern-${b.pattern} texture-${b.family}`}
-                        style={
-                          {
-                            "--accent": palette.accent,
-                            "--paper": palette.bg,
-                            background: b.gradient || palette.bg,
-                          } as React.CSSProperties
-                        }
-                      >
-                        <i className="cover-background" />
-                        {d.background === b.id && <b>✓</b>}
-                      </span>
-                      <small>{b.name}</small>
+                      <div className={`watermark-sample stamp-${w.id}`}>
+                        <SurfacePattern
+                          kind={w.id}
+                          color="#c4b58e"
+                          scale={55}
+                        />
+                      </div>
+                      {w.name}
                     </button>
                   ))}
                 </div>
+                {d.watermark !== "none" && (
+                  <>
+                    {range("watermarkOpacity", "图案透明度", 0, 70, "%")}{" "}
+                    {range("watermarkScale", "图案大小", 50, 200, "%")}
+                    <label className="fill-colors">
+                      图案颜色
+                      <input
+                        aria-label="图案颜色"
+                        type="color"
+                        value={d.watermarkColor || palette.accent}
+                        onChange={(e) =>
+                          update({ watermarkColor: e.target.value })
+                        }
+                      />
+                    </label>
+                  </>
+                )}
+                <details className="legacy-layouts">
+                  <summary>更多背景纹理 · 保留原版</summary>
+                  <label className="catalog-select">
+                    背景风格
+                    <select
+                      aria-label="背景风格"
+                      value={familyFilter}
+                      onChange={(e) =>
+                        setFamilyFilter(e.target.value as Family | "all")
+                      }
+                    >
+                      <option value="all">全部背景</option>
+                      {FAMILIES.map((f) => (
+                        <option key={f.id} value={f.id}>
+                          {f.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <div className="background-grid">
+                    {BACKGROUNDS.filter(
+                      (b) =>
+                        familyFilter === "all" || b.family === familyFilter,
+                    ).map((b) => (
+                      <button
+                        key={b.id}
+                        aria-pressed={d.background === b.id}
+                        onClick={() => update({ background: b.id })}
+                      >
+                        <span
+                          className={`background-sample pattern-${b.pattern}`}
+                          style={
+                            {
+                              "--accent": palette.accent,
+                              "--paper": palette.bg,
+                              background: b.gradient || palette.bg,
+                            } as React.CSSProperties
+                          }
+                        >
+                          <i className="cover-background" />
+                        </span>
+                        <small>{b.name}</small>
+                      </button>
+                    ))}
+                  </div>
+                </details>
               </>
             )}
             {tab === "elements" && (
@@ -1077,7 +1291,10 @@ function App() {
           )}
           <div className="canvas-stage" ref={stageRef}>
             <div className="canvas-meta">
-              <span>{activeLayout.name}</span>
+              <span>
+                {COMPOSITIONS.find((c) => c.id === d.composition)?.name ||
+                  activeLayout.name}
+              </span>
               <span>公众号头图 · 2.35 : 1</span>
             </div>
             <div
@@ -1148,7 +1365,7 @@ function App() {
           </div>
           <div className="preview-bottom">
             <span>
-              {FAMILIES.length} 类风格 · {LAYOUTS.length} 种构图 ·{" "}
+              {FAMILIES.length} 类风格 · {COMPOSITIONS.length} 种独立排版 ·{" "}
               {MOTIFS.length} 个意象
             </span>
             <span>在方寸之间，认真表达。</span>

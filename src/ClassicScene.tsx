@@ -1,3 +1,4 @@
+import { coverFill } from "./SurfaceArt";
 import React, { useState, useRef, useEffect } from "react";
 import type { Design } from "./catalog";
 import { PALETTES as STUDIO_PALETTES } from "./catalog";
@@ -2454,9 +2455,10 @@ export function ClassicScene({
         ? activeBgTemplate.accentColor
         : activeConfig.accentColor;
   const effectiveUnifiedBgGradient =
-    selectedBgId !== "bg-book-default"
+    coverFill(d, palette.canvasBg) ||
+    (selectedBgId !== "bg-book-default"
       ? `linear-gradient(110deg, ${activeBgTemplate.leftTint} 0%, ${palette.canvasBg} 50%, ${activeBgTemplate.rightTint} 100%)`
-      : palette.bgGradient;
+      : palette.bgGradient);
 
   const resolvedCenter: CenterElementId =
     centerElement !== "auto-book"
@@ -5774,7 +5776,9 @@ export function ClassicScene({
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(108deg, ${effectiveLeftTint} 0%, rgba(10, 14, 23, 0.92) 48%, ${effectiveRightTint} 100%)`,
+              background:
+                coverFill(d, palette.canvasBg) ||
+                `linear-gradient(108deg, ${effectiveLeftTint} 0%, rgba(10, 14, 23, 0.92) 48%, ${effectiveRightTint} 100%)`,
             }}
           />
           {renderGlobalBackdropTexture()}

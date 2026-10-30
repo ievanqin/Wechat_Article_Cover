@@ -1,3 +1,4 @@
+import { SurfacePattern, coverFill } from "./SurfaceArt";
 import { AidouBrandBadge } from "./BrandBadge";
 import { ClassicScene, ClassicMotif } from "./ClassicScene";
 import { RichScene } from "./RichScene";
@@ -31,7 +32,7 @@ export const CoverCanvas = forwardRef<
         (d.layout === "song-0" && title.scrollHeight > title.clientHeight + 6))
     ) {
       size -= 1;
-      title.style.fontSize = `${size}px`;
+      title.style.setProperty("font-size", `${size}px`, "important");
     }
     onOverflow?.(
       copy.scrollHeight > copy.clientHeight + 2 ||
@@ -41,10 +42,17 @@ export const CoverCanvas = forwardRef<
   const p = PALETTES.find((p) => p.id === d.palette) || PALETTES[0];
   const layout = LAYOUTS.find((l) => l.id === d.layout) || LAYOUTS[0];
   const bg = BACKGROUNDS.find((b) => b.id === d.background) || BACKGROUNDS[0];
-  const family = layout.family;
-  const variant = layout.variant;
+  const family = d.family;
+  const free = d.composition !== "legacy";
+  const fill = coverFill(d, p.bg);
+  const classic = !free && layout.family === "classic";
+  const variant = free
+    ? 0
+    : layout.variant % (layout.family === "classic" ? 12 : 6);
   return (
     <div
+      data-composition={d.composition}
+      data-fill-mode={d.fillMode}
       ref={ref}
       id={preview ? undefined : "wechat-cover-canvas"}
       className={`cover-canvas family-${family} composition-${variant} font-${d.font} visual-${d.visualMode} brand-${d.brandPosition} pattern-${bg.pattern} texture-${bg.family}`}
@@ -57,12 +65,14 @@ export const CoverCanvas = forwardRef<
           "--title-size": `${d.titleSize}px`,
           "--tracking": `${d.tracking}px`,
           "--art-opacity": d.artOpacity / 100,
+          "--art-scale": d.artScale / 100,
           backgroundColor: p.bg,
+          background: fill || p.bg,
           color: p.ink,
         } as React.CSSProperties
       }
     >
-      {family === "classic" ? (
+      {classic ? (
         <div className="classic-canvas-scene">
           <ClassicScene
             design={{
@@ -82,7 +92,11 @@ export const CoverCanvas = forwardRef<
           <div
             className={`cover-background tint-${bg.tint}`}
             style={
-              bg.gradient ? { background: bg.gradient, opacity: 1 } : undefined
+              fill
+                ? { display: "none" }
+                : bg.gradient
+                  ? { background: bg.gradient, opacity: 1 }
+                  : undefined
             }
           />
           {d.ornament && (
@@ -109,6 +123,12 @@ export const CoverCanvas = forwardRef<
           </div>
         </>
       )}
+      <SurfacePattern
+        kind={d.watermark}
+        color={d.watermarkColor || p.accent}
+        opacity={d.watermarkOpacity / 100}
+        scale={d.watermarkScale}
+      />
       {d.showThemeArtwork && (
         <div
           className="artwork-layer"

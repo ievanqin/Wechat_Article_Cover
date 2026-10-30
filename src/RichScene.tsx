@@ -1,3 +1,4 @@
+import { InkArt } from "./SurfaceArt";
 import { VirtualArt } from "./VirtualArt";
 import { EXPERIMENTAL_ART } from "./catalog";
 import { LandscapeArt } from "./LandscapeArt";
@@ -54,6 +55,8 @@ export function RichScene({
     ceramicwave: "ceramic-surf",
     cosmicportal: "cosmic-gateway",
   };
+  if (originalFamily === "inkburst" || originalFamily === "inkflow")
+    return <InkArt kind={originalFamily} thumbnail={thumbnail} />;
   if (virtualKind)
     return (
       <VirtualArt kind={virtualKind} accent={accent} thumbnail={thumbnail} />

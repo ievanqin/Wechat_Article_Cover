@@ -440,6 +440,20 @@ export const FAMILIES = [
     desc: "穿插的巨型丝带与空间剪切",
     color: "#081c40",
   },
+  {
+    id: "inkburst",
+    name: "泼墨狂草",
+    en: "INK BURST",
+    desc: "飞白笔触、浓墨喷溅与朱砂印记",
+    color: "#e8e3d6",
+  },
+  {
+    id: "inkflow",
+    name: "流墨山河",
+    en: "FLOWING INK",
+    desc: "墨液晕染、浓淡叠流与宣纸留白",
+    color: "#dce4de",
+  },
 ] as const;
 export type Family = (typeof FAMILIES)[number]["id"];
 export type Palette = {
@@ -552,6 +566,8 @@ export const PALETTES: Palette[] = [
   })),
 ];
 const names: Record<Family, string[]> = {
+  inkburst: ["泼墨主场", "墨圈留白", "飞白长卷"],
+  inkflow: ["流墨侧记", "墨河对开", "浓淡中轴"],
   mercury: [
     "汞银异形 · 巨物侧场",
     "汞银异形 · 斜切重心",
@@ -898,7 +914,66 @@ MOTIFS.push(
     tag: m.tag,
   })),
 );
+export const COMPOSITIONS = [
+  { id: "left", name: "左文右图", group: "分区", hint: "文字在左，主体在右" },
+  { id: "right", name: "左图右文", group: "分区", hint: "主体在左，文字在右" },
+  { id: "split", name: "对半分栏", group: "分区", hint: "文字与图形各占一半" },
+  {
+    id: "center",
+    name: "居中标题",
+    group: "居中",
+    hint: "居中标题，图形作为衬景",
+  },
+  { id: "top", name: "上文下图", group: "上下", hint: "顶部标题，底部主视觉" },
+  {
+    id: "bottom",
+    name: "上图下文",
+    group: "上下",
+    hint: "上方主视觉，下方标题",
+  },
+  {
+    id: "diagonal",
+    name: "倾斜海报",
+    group: "海报",
+    hint: "倾斜标题与放大的主体",
+  },
+  {
+    id: "vertical",
+    name: "竖排题签",
+    group: "海报",
+    hint: "竖排中文，侧边插画",
+  },
+  {
+    id: "oversize",
+    name: "大字宣言",
+    group: "海报",
+    hint: "大标题与小幅主视觉",
+  },
+  { id: "frame", name: "留白画框", group: "居中", hint: "居中排版与细线画框" },
+] as const;
+export type CompositionId = (typeof COMPOSITIONS)[number]["id"] | "legacy";
+export const WATERMARKS = [
+  { id: "none", name: "无图案" },
+  { id: "dots", name: "细点" },
+  { id: "grid", name: "方格" },
+  { id: "waves", name: "水波" },
+  { id: "books", name: "书本" },
+  { id: "stars", name: "星芒" },
+  { id: "arches", name: "拱门" },
+  { id: "ink", name: "墨渍" },
+  { id: "grain", name: "纸上墨点" },
+] as const;
 export interface Design {
+  composition: CompositionId;
+  fillMode: "theme" | "solid" | "linear" | "radial" | "mesh";
+  fillColor: string;
+  gradientColor: string;
+  gradientAngle: number;
+  watermark: (typeof WATERMARKS)[number]["id"];
+  watermarkOpacity: number;
+  watermarkScale: number;
+  watermarkColor: string;
+
   footerText: string;
   articleTitle: string;
   layerTransforms: Record<string, { x: number; y: number; scale: number }>;
@@ -938,6 +1013,16 @@ export interface Design {
   font: FontId;
 }
 export const INITIAL: Design = {
+  composition: "legacy",
+  fillMode: "theme",
+  fillColor: "",
+  gradientColor: "#6754a2",
+  gradientAngle: 135,
+  watermark: "none",
+  watermarkOpacity: 15,
+  watermarkScale: 100,
+  watermarkColor: "",
+
   footerText: "IDOL BOOKLIST",
   articleTitle: "",
   layerVersion: 1,
@@ -976,6 +1061,23 @@ export const INITIAL: Design = {
   font: "serif",
 };
 export const PRESETS: Record<Family, Partial<Design>> = {
+  inkburst: {
+    palette: PALETTES.find((p) => p.family === "inkwash")!.id,
+    background: "bg-61-1",
+    visualMode: "painted",
+    font: "kai",
+    artOpacity: 100,
+    ornament: false,
+  },
+  inkflow: {
+    palette: PALETTES.find((p) => p.family === "mistland")!.id,
+    background: "bg-62-1",
+    visualMode: "painted",
+    font: "elegant",
+    artOpacity: 100,
+    ornament: false,
+  },
+
   mercury: {
     layout: "mercury-0",
     palette: PALETTES.find((p) => p.family === "mercury")!.id,
@@ -1807,6 +1909,8 @@ export const THEME_GROUPS = [
     id: "oriental",
     name: "国风水墨",
     families: [
+      "inkburst",
+      "inkflow",
       "song",
       "history",
       "orientalcut",
@@ -1877,5 +1981,18 @@ MOTIFS.push(
     category: "center" as const,
     family: family as Family,
     shape: -6,
+  })),
+);
+
+MOTIFS.push(
+  ...[
+    ["inkburst", "泼墨飞白墨圈"],
+    ["inkflow", "流动墨迹"],
+  ].map(([family, name]) => ({
+    id: "ink:" + family,
+    name,
+    category: "center" as const,
+    family: family as Family,
+    shape: -7,
   })),
 );

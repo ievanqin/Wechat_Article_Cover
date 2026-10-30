@@ -1,3 +1,4 @@
+import { InkArt } from "./SurfaceArt";
 import { VirtualArt } from "./VirtualArt";
 import { LandscapeArt } from "./LandscapeArt";
 import { SculptureArt } from "./SculptureArt";
@@ -161,6 +162,8 @@ export function MotifArt({
       </svg>
     );
   }
+  if (id.startsWith("ink:"))
+    return <InkArt kind={id.slice(4)} thumbnail={thumbnail} />;
   if (id.startsWith("virtual:"))
     return (
       <VirtualArt kind={id.slice(8)} accent={color} thumbnail={thumbnail} />
