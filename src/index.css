@@ -4215,3 +4215,5 @@ body,
 }
 .cover-canvas:has(.virtual-scene) .cover-title {text-wrap:balance;}
 .cover-canvas:has(.virtual-scene).composition-3 .cover-author {display:none;}
+.cover-canvas:has(.virtual-scene) .artwork-layer {left:0;right:0;opacity:var(--art-opacity)!important;transform-origin:80% 60%;}
+
