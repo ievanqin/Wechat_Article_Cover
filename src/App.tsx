@@ -1,3 +1,5 @@
+import { CLASSIC_BOOKS } from "./ClassicScene";
+import { AidouBrandBadge } from "./BrandBadge";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { domToPng } from "modern-screenshot";
 import {
@@ -28,6 +30,7 @@ function readDraft(): Design {
       "author",
       "brand",
       "issue",
+      "quote",
     ] as const)
       if (typeof v[key] === "string")
         d[key] = v[key].slice(0, key === "title" ? 80 : 160);
@@ -54,6 +57,32 @@ function readDraft(): Design {
     for (const key of ["showBrand", "showGuides"] as const)
       if (typeof v[key] === "boolean") d[key] = v[key];
     if (v.font === "serif" || v.font === "sans") d.font = v.font;
+    if (["top-left", "top-right", "bottom-left"].includes(v.brandPosition))
+      d.brandPosition = v.brandPosition;
+    if (["gold-dark", "ivory-crimson", "frosted-glass"].includes(v.brandTheme))
+      d.brandTheme = v.brandTheme;
+    if (["line", "painted", "luminous"].includes(v.visualMode))
+      d.visualMode = v.visualMode;
+    if (
+      ["royal-sealed-tome", "open-starlight-book", "stacked-classics"].includes(
+        v.bookStyle,
+      )
+    )
+      d.bookStyle = v.bookStyle;
+    if (typeof v.ornament === "boolean") d.ornament = v.ornament;
+    if (CLASSIC_BOOKS.some((b) => b.id === v.classicBook))
+      d.classicBook = v.classicBook;
+    if (v.classicElements && typeof v.classicElements === "object")
+      d.classicElements = Object.fromEntries(
+        Object.entries(v.classicElements).filter(
+          ([k, id]) =>
+            ["center", "side", "sky", "bottom"].includes(k) &&
+            typeof id === "string" &&
+            (id === "none" || MOTIFS.some((m) => m.id === "original:" + id)),
+        ),
+      );
+    if (Number.isFinite(v.subtitleSize))
+      d.subtitleSize = Math.max(12, Math.min(28, v.subtitleSize));
     return d;
   } catch {
     return INITIAL;
@@ -61,9 +90,19 @@ function readDraft(): Design {
 }
 const TABS = [
   { id: "copy", name: "文案", icon: "T", hint: "写下你的故事" },
-  { id: "layout", name: "构图", icon: "▦", hint: "30 种排版灵感" },
+  {
+    id: "layout",
+    name: "构图",
+    icon: "▦",
+    hint: `${LAYOUTS.length} 种排版灵感`,
+  },
   { id: "theme", name: "主题", icon: "◐", hint: "色彩与背景" },
-  { id: "elements", name: "元素", icon: "✳", hint: "96 个矢量意象" },
+  {
+    id: "elements",
+    name: "元素",
+    icon: "✳",
+    hint: `${MOTIFS.length} 个视觉意象`,
+  },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 const categories = [
@@ -83,6 +122,9 @@ function App() {
   const [familyFilter, setFamilyFilter] = useState<Family | "all">("all");
   const [category, setCategory] =
     useState<(typeof categories)[number]["id"]>("center");
+  const [themeFilter, setThemeFilter] = useState<
+    "all" | "classic" | "category" | "modern"
+  >("all");
   const [query, setQuery] = useState("");
   const [hasOverflow, setHasOverflow] = useState(false);
   const [saving, setSaving] = useState("已自动保存");
@@ -180,8 +222,9 @@ function App() {
   const toggleMotif = (id: string) => {
     const target = MOTIFS.find((m) => m.id === id);
     if (!target) return;
-    update({
-      elements: d.elements.includes(id)
+    const active = d.elements.includes(id);
+    const patch: Partial<Design> = {
+      elements: active
         ? d.elements.filter((x) => x !== id)
         : [
             ...d.elements.filter(
@@ -190,7 +233,17 @@ function App() {
             ),
             id,
           ],
-    });
+    };
+    if (d.family === "classic")
+      patch.classicElements = {
+        ...d.classicElements,
+        [target.category]: active
+          ? "none"
+          : id.startsWith("original:")
+            ? id.slice(9)
+            : "none",
+      };
+    update(patch);
   };
   async function download() {
     if (!canvasRef.current || exporting.current) return;
@@ -226,12 +279,13 @@ function App() {
     (m) =>
       m.category === category &&
       (!query ||
-        `${m.name} ${FAMILIES.find((f) => f.id === m.family)?.name}`.includes(
+        `${m.name} ${m.tag || ""} ${FAMILIES.find((f) => f.id === m.family)?.name}`.includes(
           query,
         )),
   );
   const field = (
-    key: "title" | "subtitle" | "eyebrow" | "author" | "brand" | "issue",
+    key:
+      "title" | "subtitle" | "eyebrow" | "author" | "brand" | "issue" | "quote",
     label: string,
     multiline = false,
   ) => (
@@ -259,7 +313,7 @@ function App() {
     </label>
   );
   const range = (
-    key: "titleSize" | "tracking" | "artOpacity" | "artScale",
+    key: "titleSize" | "tracking" | "artOpacity" | "artScale" | "subtitleSize",
     label: string,
     min: number,
     max: number,
@@ -286,12 +340,14 @@ function App() {
     <div className="studio">
       <header className="app-header">
         <a className="wordmark" href="#">
-          <span className="logo-mark">豆</span>
-          <span>
-            封面之间<small>COVER ATELIER</small>
+          <div className="header-brand">
+            <AidouBrandBadge position="top-left" theme="gold-dark" />
+          </div>
+          <span className="header-product">
+            封面创作室<small>THE BOOK COVER STUDIO</small>
           </span>
         </a>
-        <div className="header-middle">给好内容，一个好看的开场。</div>
+        <div className="header-middle">为每一本好书，设计值得停留的一眼。</div>
         <div className="header-actions">
           <span className="save-status">
             <i />
@@ -343,6 +399,8 @@ function App() {
                 </div>
                 {field("title", "主标题", true)}
                 {field("subtitle", "副标题", true)}
+                {d.family === "classic" &&
+                  field("quote", "原版引言 / 金句", true)}
                 <div className="two-fields">
                   {field("eyebrow", "眉题 / 英文")}
                   {field("issue", "期刊 / 编号")}
@@ -364,6 +422,8 @@ function App() {
                   </button>
                 </div>
                 {range("titleSize", "标题字号", 32, 96, "px")}
+                {d.family === "classic" &&
+                  range("subtitleSize", "副标题字号", 12, 28, "px")}
                 {range("tracking", "标题字距", -2, 12, "px")}
                 <div className="section-label">
                   品牌标识
@@ -377,7 +437,47 @@ function App() {
                     <span />
                   </label>
                 </div>
-                {d.showBrand && field("brand", "品牌名称")}
+                {d.showBrand && (
+                  <>
+                    {field("brand", "品牌名称")}
+                    <div className="control-caption">原版品牌锚点</div>
+                    <div className="segmented">
+                      {(
+                        [
+                          ["top-left", "左上"],
+                          ["top-right", "右上"],
+                          ["bottom-left", "左下"],
+                        ] as const
+                      ).map(([id, name]) => (
+                        <button
+                          key={id}
+                          aria-pressed={d.brandPosition === id}
+                          onClick={() => update({ brandPosition: id })}
+                        >
+                          {name}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="control-caption">徽章风格</div>
+                    <div className="segmented">
+                      {(
+                        [
+                          ["gold-dark", "曜石黑金"],
+                          ["ivory-crimson", "象牙朱砂"],
+                          ["frosted-glass", "磨砂琉璃"],
+                        ] as const
+                      ).map(([id, name]) => (
+                        <button
+                          key={id}
+                          aria-pressed={d.brandTheme === id}
+                          onClick={() => update({ brandTheme: id })}
+                        >
+                          {name}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
                 <div className="quiet-note">
                   小提示：主标题建议 8—20 字，按 Enter
                   换行。长标题会自动缩小，避免超出画布。
@@ -391,7 +491,7 @@ function App() {
                     aria-pressed={familyFilter === "all"}
                     onClick={() => setFamilyFilter("all")}
                   >
-                    全部 30
+                    全部 {LAYOUTS.length}
                   </button>
                   {FAMILIES.map((f) => (
                     <button
@@ -442,35 +542,160 @@ function App() {
                 <div className="section-label">
                   整套风格<span>组合构图、色彩与意象</span>
                 </div>
+                <div className="filter-row theme-filter">
+                  {(
+                    [
+                      ["all", "全部风格"],
+                      ["classic", "原版经典"],
+                      ["category", "图书分类"],
+                      ["modern", "现代风格"],
+                    ] as const
+                  ).map(([id, name]) => (
+                    <button
+                      key={id}
+                      aria-pressed={themeFilter === id}
+                      onClick={() => setThemeFilter(id)}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
                 <div className="family-grid">
-                  {FAMILIES.map((f) => (
+                  {FAMILIES.filter(
+                    (f, i) =>
+                      themeFilter === "all" ||
+                      (themeFilter === "classic"
+                        ? f.id === "classic"
+                        : themeFilter === "modern"
+                          ? i < 6
+                          : i > 6),
+                  ).map((f) => (
                     <button
                       key={f.id}
                       className={d.family === f.id ? "selected" : ""}
                       aria-pressed={d.family === f.id}
+                      title={f.desc}
                       onClick={() => applyFamily(f.id)}
                     >
-                      <span
-                        className={`family-art family-art-${f.id}`}
-                        style={{ background: f.color }}
-                      >
-                        {f.id === "song"
-                          ? "宋"
-                          : f.id === "tech"
-                            ? "⌘"
-                            : f.id === "editorial"
-                              ? "Aa"
-                              : f.id === "poster"
-                                ? "◒"
-                                : f.id === "literary"
-                                  ? "书"
-                                  : "a"}
+                      <span className="family-art">
+                        <span className="theme-thumb">
+                          <CoverCanvas
+                            preview
+                            design={{
+                              ...d,
+                              ...PRESETS[f.id],
+                              title: f.name,
+                              subtitle: f.desc,
+                              eyebrow: f.en,
+                              family: f.id,
+                              showBrand: false,
+                              showGuides: false,
+                              titleSize: 68,
+                            }}
+                          />
+                        </span>
+                        <i>{d.family === f.id ? "✓ 已应用" : "应用风格 ↗"}</i>
                       </span>
                       <strong>{f.name}</strong>
                       <small>{f.en}</small>
+                      <p>{f.desc}</p>
                     </button>
                   ))}
                 </div>
+                {d.family === "classic" && (
+                  <div className="classic-controls">
+                    <div className="section-label">
+                      原版书籍意象套件<span>完整保留原始设计</span>
+                    </div>
+                    <label className="field">
+                      <span>书籍主题</span>
+                      <select
+                        value={d.classicBook}
+                        onChange={(e) =>
+                          update({
+                            classicBook: e.target.value,
+                            classicElements: {},
+                            elements: [],
+                          })
+                        }
+                      >
+                        {CLASSIC_BOOKS.map((b) => (
+                          <option key={b.id} value={b.id}>
+                            {b.title}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <button
+                      className="sample-copy-button"
+                      onClick={() => {
+                        const b = CLASSIC_BOOKS.find(
+                          (b) => b.id === d.classicBook,
+                        )!;
+                        update({
+                          title: b.title,
+                          subtitle: b.subtitle,
+                          eyebrow: b.englishTitle,
+                          author: b.author,
+                          issue: b.issueNumber,
+                          quote: b.quote,
+                          titleSize: 54,
+                        });
+                      }}
+                    >
+                      使用这本书的原版文案 ↗
+                    </button>
+                    <label className="field">
+                      <span>原版立体书造型</span>
+                      <select
+                        value={d.bookStyle}
+                        onChange={(e) =>
+                          update({
+                            bookStyle: e.target.value as Design["bookStyle"],
+                          })
+                        }
+                      >
+                        <option value="open-starlight-book">
+                          翻开的星芒古籍
+                        </option>
+                        <option value="royal-sealed-tome">
+                          烫金火漆精装书
+                        </option>
+                        <option value="stacked-classics">
+                          典藏书堆与羽毛笔
+                        </option>
+                      </select>
+                    </label>
+                  </div>
+                )}
+                <div className="section-label">
+                  视觉表现<span>同样的元素，不同的质感</span>
+                </div>
+                <div className="segmented">
+                  {(
+                    [
+                      ["line", "清简线描"],
+                      ["painted", "填色浮雕"],
+                      ["luminous", "光影辉光"],
+                    ] as const
+                  ).map(([id, name]) => (
+                    <button
+                      key={id}
+                      aria-pressed={d.visualMode === id}
+                      onClick={() => update({ visualMode: id })}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+                <label className="ornament-toggle">
+                  <input
+                    type="checkbox"
+                    checked={d.ornament}
+                    onChange={(e) => update({ ornament: e.target.checked })}
+                  />
+                  装帧增强 · 金线边框、角花与星尘
+                </label>
                 <div className="section-label">
                   主题颜色<span>{PALETTES.length} 套可混搭</span>
                 </div>
@@ -529,7 +754,7 @@ function App() {
                           {
                             "--accent": palette.accent,
                             "--paper": palette.bg,
-                            background: palette.bg,
+                            background: b.gradient || palette.bg,
                           } as React.CSSProperties
                         }
                       >
@@ -566,7 +791,9 @@ function App() {
                       onClick={() => setCategory(c.id)}
                     >
                       {c.name}
-                      <small>24</small>
+                      <small>
+                        {MOTIFS.filter((m) => m.category === c.id).length}
+                      </small>
                     </button>
                   ))}
                 </div>
@@ -579,7 +806,12 @@ function App() {
                       onClick={() => toggleMotif(m.id)}
                     >
                       <div>
-                        <MotifArt id={m.id} color={palette.accent} thumbnail />
+                        <MotifArt
+                          id={m.id}
+                          color={palette.accent}
+                          thumbnail
+                          mode={d.visualMode}
+                        />
                       </div>
                       <span>{m.name}</span>
                       {d.elements.includes(m.id) && <i>✓</i>}
@@ -598,7 +830,17 @@ function App() {
                   <button
                     className="text-button"
                     disabled={!d.elements.length}
-                    onClick={() => update({ elements: [] })}
+                    onClick={() =>
+                      update({
+                        elements: [],
+                        classicElements: {
+                          center: "none",
+                          side: "none",
+                          sky: "none",
+                          bottom: "none",
+                        },
+                      })
+                    }
                   >
                     清空
                   </button>
@@ -675,6 +917,14 @@ function App() {
           <div className="canvas-stage" ref={stageRef}>
             <div className="canvas-meta">
               <span>{activeLayout.name}</span>
+              {d.family !== "classic" && (
+                <button
+                  className="classic-return"
+                  onClick={() => applyFamily("classic")}
+                >
+                  ↶ 回到原版经典
+                </button>
+              )}
               <span>公众号头图 · 2.35 : 1</span>
             </div>
             <div
@@ -752,20 +1002,23 @@ function App() {
             <div className="design-note">
               <span className="note-symbol">✳</span>
               <span className="overline">A LITTLE DESIGN NOTE</span>
-              <h3>留白，也是内容。</h3>
+              <h3>让好书，自带光芒。</h3>
               <p>
-                不必把所有元素都填满。
+                原版装帧与新的灵感，
                 <br />
-                让标题先被看见，
+                为每一种阅读偏好，
                 <br />
-                再让细节慢慢被发现。
+                找到属于它的视觉语言。
               </p>
               <span className="note-rule" />
               <small>DESIGNED FOR YOUR WORDS</small>
             </div>
           </div>
           <div className="preview-bottom">
-            <span>40 套配色 · 30 种构图 · 96 个意象</span>
+            <span>
+              {FAMILIES.length} 类风格 · {LAYOUTS.length} 种构图 ·{" "}
+              {MOTIFS.length} 个意象
+            </span>
             <span>在方寸之间，认真表达。</span>
           </div>
         </main>

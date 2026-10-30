@@ -1,3 +1,6 @@
+import { AidouBrandBadge } from "./BrandBadge";
+import { ClassicScene, ClassicMotif } from "./ClassicScene";
+import { RichScene } from "./RichScene";
 import { forwardRef, useLayoutEffect, useRef } from "react";
 import {
   BACKGROUNDS,
@@ -16,7 +19,10 @@ export const CoverCanvas = forwardRef<
   useLayoutEffect(() => {
     const copy = copyRef.current;
     const title = copy?.querySelector<HTMLElement>(".cover-title");
-    if (!copy || !title) return;
+    if (!copy || !title) {
+      onOverflow?.(false);
+      return;
+    }
     title.style.fontSize = "";
     let size = parseFloat(getComputedStyle(title).fontSize);
     while (
@@ -41,7 +47,7 @@ export const CoverCanvas = forwardRef<
     <div
       ref={ref}
       id={preview ? undefined : "wechat-cover-canvas"}
-      className={`cover-canvas family-${family} composition-${variant} font-${d.font} pattern-${bg.pattern} texture-${bg.family}`}
+      className={`cover-canvas family-${family} composition-${variant} font-${d.font} visual-${d.visualMode} brand-${d.brandPosition} pattern-${bg.pattern} texture-${bg.family}`}
       style={
         {
           "--paper": p.bg,
@@ -56,49 +62,89 @@ export const CoverCanvas = forwardRef<
         } as React.CSSProperties
       }
     >
-      <div className={`cover-background tint-${bg.tint}`} />
-      <div className="cover-decoration" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-      <div
-        className="artwork-layer"
-        style={{
-          opacity: d.artOpacity / 100,
-          transform: `scale(${d.artScale / 100})`,
-        }}
-      >
-        {d.elements.map((id) => (
-          <MotifArt key={id} id={id} color={p.accent} />
-        ))}
-      </div>
-      <div className="cover-topline">
-        {d.showBrand ? (
-          <span className="cover-brand">
-            <b>豆</b>
-            {d.brand}
-          </span>
-        ) : (
-          <span />
-        )}
-        <span>{d.issue}</span>
-      </div>
-      <div className="cover-copy" ref={copyRef}>
-        <div className="cover-eyebrow">{d.eyebrow}</div>
-        <h2 className="cover-title">{d.title || "写下你的标题"}</h2>
-        <div className="cover-rule" />
-        <p className="cover-subtitle">{d.subtitle}</p>
-        <div className="cover-author">{d.author}</div>
-      </div>
-      <div className="cover-bottomline">
-        <span>{FAMILIES.find((f) => f.id === family)?.en}</span>
-        <span>
-          {family === "tech"
-            ? "SYSTEM / READING / 026"
-            : "一页一世界 · 阅读有回响"}
-        </span>
-      </div>
+      {family === "classic" ? (
+        <div className="classic-canvas-scene">
+          <ClassicScene design={d} />
+          {d.elements
+            .filter((id) => !id.startsWith("original:"))
+            .map((id) => (
+              <MotifArt key={id} id={id} color={p.accent} mode={d.visualMode} />
+            ))}
+        </div>
+      ) : (
+        <>
+          {" "}
+          <div
+            className={`cover-background tint-${bg.tint}`}
+            style={
+              bg.gradient ? { background: bg.gradient, opacity: 1 } : undefined
+            }
+          />
+          {d.ornament && (
+            <div className="cover-decoration" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+          )}
+          <div
+            className="artwork-layer"
+            style={{
+              opacity: d.artOpacity / 100,
+              transform: `scale(${d.artScale / 100})`,
+            }}
+          >
+            {d.visualMode !== "line" && (
+              <RichScene
+                family={family}
+                accent={p.accent}
+                ink={p.ink}
+                mode={d.visualMode}
+              />
+            )}
+            {d.elements.map((id) =>
+              id.startsWith("original:") ? (
+                <ClassicMotif key={id} id={id} design={d} />
+              ) : (
+                <MotifArt
+                  key={id}
+                  id={id}
+                  color={p.accent}
+                  mode={d.visualMode}
+                />
+              ),
+            )}
+          </div>
+          <div className="cover-topline">
+            <span />
+            <span>{d.issue}</span>
+          </div>
+          <div className="cover-copy" ref={copyRef}>
+            <div className="cover-eyebrow">{d.eyebrow}</div>
+            <h2 className="cover-title">{d.title || "写下你的标题"}</h2>
+            <div className="cover-rule" />
+            <p className="cover-subtitle">{d.subtitle}</p>
+            <div className="cover-author">{d.author}</div>
+          </div>
+          <div className="cover-bottomline">
+            <span>{FAMILIES.find((f) => f.id === family)?.en}</span>
+            <span>
+              {family === "tech"
+                ? "SYSTEM / READING / 026"
+                : "一页一世界 · 阅读有回响"}
+            </span>
+          </div>
+        </>
+      )}
+      {d.showBrand && (
+        <div className="brand-layer">
+          <AidouBrandBadge
+            position={d.brandPosition}
+            theme={d.brandTheme}
+            brand={d.brand}
+          />
+        </div>
+      )}
       {d.showGuides && !preview && (
         <div className="safe-guides" data-export-ignore="true">
           <span>安全区域</span>

@@ -1,3 +1,5 @@
+import { BACKGROUND_TEMPLATES as CLASSIC_BACKGROUNDS } from "./classicBackgrounds";
+import { CLASSIC_MOTIFS } from "./classicOptions";
 import { COLOR_PALETTES } from "./paletteLibrary";
 export const FAMILIES = [
   {
@@ -42,6 +44,97 @@ export const FAMILIES = [
     desc: "大胆构成、色块与抽象图形",
     color: "#e9dfcf",
   },
+  {
+    id: "classic",
+    name: "原版经典",
+    en: "IDOL ORIGINALS",
+    desc: "原版完整图腾、装帧与十二种经典构图",
+    color: "#20283a",
+  },
+  {
+    id: "epic",
+    name: "奇幻史诗",
+    en: "FANTASY & EPIC",
+    desc: "铁王座、龙焰、城堡与冰火对峙",
+    color: "#442e4f",
+  },
+  {
+    id: "history",
+    name: "历史人文",
+    en: "HISTORY & CULTURE",
+    desc: "宫阙、山河、古卷与时代纵深",
+    color: "#8b4b32",
+  },
+  {
+    id: "science",
+    name: "科普宇宙",
+    en: "SCIENCE & COSMOS",
+    desc: "星云、行星、实验与太空探索",
+    color: "#204e7e",
+  },
+  {
+    id: "mind",
+    name: "心理成长",
+    en: "MIND & GROWTH",
+    desc: "意识之门、大脑网络与觉醒光束",
+    color: "#b37b36",
+  },
+  {
+    id: "business",
+    name: "商业经管",
+    en: "BUSINESS & FINANCE",
+    desc: "黑金城市、上升曲线与理性秩序",
+    color: "#303d39",
+  },
+  {
+    id: "mystery",
+    name: "悬疑推理",
+    en: "MYSTERY & CRIME",
+    desc: "迷雾街道、侦探镜头与暗夜红线",
+    color: "#343749",
+  },
+  {
+    id: "nature",
+    name: "自然旅行",
+    en: "NATURE & JOURNEY",
+    desc: "层叠山峦、海洋、森林与自然光",
+    color: "#285a4c",
+  },
+  {
+    id: "children",
+    name: "童书绘本",
+    en: "CHILDREN & WONDER",
+    desc: "童话星球、明亮色块与轻松想象",
+    color: "#df8866",
+  },
+  {
+    id: "biography",
+    name: "人物传记",
+    en: "LIVES & BIOGRAPHY",
+    desc: "人物剪影、档案肖像与时代印记",
+    color: "#765349",
+  },
+  {
+    id: "philosophy",
+    name: "哲学社科",
+    en: "PHILOSOPHY & SOCIETY",
+    desc: "古典柱廊、思辨之门与人文结构",
+    color: "#666454",
+  },
+  {
+    id: "poetry",
+    name: "诗词散文",
+    en: "POETRY & ESSAYS",
+    desc: "月、花、山水与细腻的情绪",
+    color: "#7b687b",
+  },
+  {
+    id: "library",
+    name: "图书典藏",
+    en: "THE BOOK COLLECTION",
+    desc: "立体精装书、书页、烫金与藏书票",
+    color: "#6b3b32",
+  },
 ] as const;
 export type Family = (typeof FAMILIES)[number]["id"];
 export type Palette = {
@@ -78,6 +171,18 @@ const newColors: [string, string, string, string, Family][] = [
   ["焦糖书页", "#e8d9c3", "#493c30", "#8e592e", "literary"],
   ["暮色诗集", "#342c38", "#f5e7e1", "#d8a59c", "literary"],
   ["复古橙蓝", "#f3e3c9", "#244763", "#d96938", "poster"],
+  ["龙焰熔金", "#120e20", "#fff4dd", "#f5b44b", "epic"],
+  ["朱砂山河", "#301716", "#fff0cf", "#e6b56b", "history"],
+  ["星云蓝紫", "#0a102c", "#effbff", "#73d6fa", "science"],
+  ["觉醒琥珀", "#17172a", "#fff4dc", "#ffbd60", "mind"],
+  ["资本黑金", "#0d171b", "#f8f5e5", "#dbbf75", "business"],
+  ["深夜红线", "#101725", "#f1f3f8", "#f16868", "mystery"],
+  ["群青秘境", "#0e3534", "#eef9e3", "#a5d18d", "nature"],
+  ["蜜桃童话", "#ffebc9", "#453c69", "#d36754", "children"],
+  ["档案棕金", "#332824", "#fff1d9", "#d9ad79", "biography"],
+  ["古典石阶", "#e6dfcc", "#353e3e", "#827655", "philosophy"],
+  ["月色荷香", "#18313e", "#eff6ee", "#d8c59c", "poetry"],
+  ["藏书红金", "#2e1020", "#fff0d6", "#e3bd75", "library"],
 ];
 export const PALETTES: Palette[] = [
   ...newColors.map(([name, bg, ink, accent, family], i) => ({
@@ -106,10 +211,39 @@ const names: Record<Family, string[]> = {
   editorial: ["杂志封面", "编辑专栏", "大字宣言", "双栏叙事", "档案目录"],
   literary: ["书房夜读", "扉页题记", "经典装帧", "诗歌留白", "读书札记"],
   poster: ["几何拼贴", "色块分割", "圆形剧场", "倾斜构成", "展览标签"],
+  classic: [
+    "经典左文右书",
+    "居中徽章圣殿",
+    "黄金分割画廊",
+    "极简藏书票",
+    "国风竖题长卷",
+    "宽银幕电影",
+    "戏剧斜切",
+    "暗黑史诗全元素",
+    "长爪巨剑",
+    "羊皮古卷双徽",
+    "血色彗星王座",
+    "北境白雪心树",
+  ],
+  epic: ["龙焰启幕", "冰火双极", "王座史诗"],
+  history: ["山河题卷", "宫阙对开", "盛世长歌"],
+  science: ["深空航行", "宇宙分野", "引力中心"],
+  mind: ["觉醒之门", "内在探索", "向光而生"],
+  business: ["黑金商业", "城市决策", "趋势焦点"],
+  mystery: ["午夜线索", "案卷重构", "迷雾之眼"],
+  nature: ["山海远行", "森林来信", "自然之境"],
+  children: ["奇想星球", "彩色冒险", "童话剧场"],
+  biography: ["人物档案", "时代回声", "人生侧写"],
+  philosophy: ["思辨之门", "人文对话", "秩序之美"],
+  poetry: ["月下花影", "山水寄情", "诗意中轴"],
+  library: ["精装典藏", "藏书对开", "经典扉页"],
 };
 export const LAYOUTS = FAMILIES.flatMap((f) =>
   names[f.id].map((name, variant) => ({
-    id: `${f.id}-${variant}`,
+    id:
+      f.id === "classic"
+        ? `classic:${["tpl-1-magazine-book", "tpl-2-center-emblem", "tpl-3-editorial-split", "tpl-4-minimal-frame", "tpl-5-chinese-scroll", "tpl-6-cinema-widescreen", "tpl-7-split-diagonal", "style-1-epic-original", "style-2-minimal-sword", "style-3-woodcut-heraldry", "style-4-red-comet-throne", "style-5-weirwood-snow"][variant]}`
+        : `${f.id}-${variant}`,
     family: f.id,
     name,
     variant,
@@ -130,11 +264,27 @@ export const BACKGROUNDS = FAMILIES.flatMap((f, group) =>
     (name, i) => ({
       id: `bg-${group}-${i}`,
       family: f.id,
-      name: `${["清晨", "绢本", "数码", "印刷", "书页", "画布"][group]}·${name}`,
+      name: `${["清晨", "绢本", "数码", "印刷", "书页", "画布"][group] || f.name}·${name}`,
       pattern: (["plain", "paper", "grid", "dots", "waves", "sun"] as const)[i],
       tint: i === 5 ? "warm" : i === 4 ? "cool" : "neutral",
+      gradient: undefined as string | undefined,
     }),
   ),
+);
+BACKGROUNDS.push(
+  ...CLASSIC_BACKGROUNDS.filter((b) => b.id !== "bg-book-default").map((b) => ({
+    id: "original-bg:" + b.id,
+    family: "classic" as Family,
+    name: "原版 · " + b.name.replace(/^\d+\. /, ""),
+    pattern:
+      b.patternType === "brick-wall"
+        ? ("paper" as const)
+        : b.patternType === "grid-ledger"
+          ? ("grid" as const)
+          : ("sun" as const),
+    tint: "neutral",
+    gradient: `linear-gradient(112deg,${b.leftTint},${b.rightTint})`,
+  })),
 );
 export type Motif = {
   id: string;
@@ -142,6 +292,7 @@ export type Motif = {
   category: "center" | "side" | "sky" | "bottom";
   family: Family;
   shape: number;
+  tag?: string;
 };
 const motifNames = {
   center: [
@@ -259,7 +410,28 @@ export const MOTIFS: Motif[] = Object.entries(motifNames).flatMap(
       shape: i,
     })),
 );
+MOTIFS.push(
+  ...CLASSIC_MOTIFS.map((m) => ({
+    id: m.id,
+    name: m.name,
+    category: m.category,
+    family: "classic" as Family,
+    shape: -1,
+    tag: m.tag,
+  })),
+);
 export interface Design {
+  classicBook: string;
+  classicElements: Partial<
+    Record<"center" | "side" | "sky" | "bottom", string>
+  >;
+  brandPosition: "top-left" | "top-right" | "bottom-left";
+  brandTheme: "gold-dark" | "ivory-crimson" | "frosted-glass";
+  bookStyle: "open-starlight-book" | "royal-sealed-tome" | "stacked-classics";
+  ornament: boolean;
+  visualMode: "line" | "painted" | "luminous";
+  subtitleSize: number;
+  quote: string;
   title: string;
   subtitle: string;
   eyebrow: string;
@@ -280,20 +452,30 @@ export interface Design {
   font: "serif" | "sans";
 }
 export const INITIAL: Design = {
-  title: "把日子，\n读成一首诗",
-  subtitle: "在书页之间，重新发现生活的辽阔。",
+  classicBook: "along-the-river-code",
+  classicElements: {},
+  brandPosition: "top-left",
+  brandTheme: "gold-dark",
+  bookStyle: "open-starlight-book",
+  ornament: true,
+  visualMode: "painted",
+  subtitleSize: 18,
+  quote: "一幅画里的盛世与危局，一本书里的山河与人心。",
+
+  title: "清明上河图密码",
+  subtitle: "一幅名画藏尽帝国盛衰，八百二十四人皆在惊天杀局之中",
   eyebrow: "READ A LITTLE · LIVE A LITTLE",
   author: "爱豆书单 · 每周共读",
   brand: "爱豆书单",
   issue: "VOL. 026",
-  family: "minimal",
-  layout: "minimal-0",
-  palette: "new-0",
-  background: "bg-0-1",
-  elements: ["center-1", "sky-3", "bottom-3"],
-  titleSize: 68,
+  family: "classic",
+  layout: "classic:style-1-epic-original",
+  palette: "ice-fire-gold",
+  background: "bg-6-0",
+  elements: [],
+  titleSize: 54,
   tracking: 2,
-  artOpacity: 55,
+  artOpacity: 85,
   artScale: 100,
   showBrand: true,
   showGuides: false,
@@ -301,6 +483,8 @@ export const INITIAL: Design = {
 };
 export const PRESETS: Record<Family, Partial<Design>> = {
   minimal: {
+    visualMode: "line",
+    artOpacity: 55,
     layout: "minimal-0",
     palette: "new-0",
     background: "bg-0-1",
@@ -318,7 +502,9 @@ export const PRESETS: Record<Family, Partial<Design>> = {
     layout: "tech-0",
     palette: "new-12",
     background: "bg-2-2",
-    elements: ["center-6", "side-6", "sky-6", "bottom-6"],
+    elements: [],
+    visualMode: "luminous",
+    artOpacity: 90,
     font: "sans",
   },
   editorial: {
@@ -332,7 +518,9 @@ export const PRESETS: Record<Family, Partial<Design>> = {
     layout: "literary-0",
     palette: "new-21",
     background: "bg-4-1",
-    elements: ["center-8", "side-9", "bottom-8"],
+    elements: [],
+    visualMode: "painted",
+    artOpacity: 85,
     font: "serif",
   },
   poster: {
@@ -341,5 +529,123 @@ export const PRESETS: Record<Family, Partial<Design>> = {
     background: "bg-5-5",
     elements: ["center-10", "sky-10", "bottom-10"],
     font: "sans",
+  },
+  classic: {
+    layout: "classic:style-1-epic-original",
+    palette: "ice-fire-gold",
+    background: "bg-6-0",
+    elements: [],
+    font: "serif",
+    artOpacity: 85,
+    visualMode: "painted",
+    classicElements: {},
+  },
+  epic: {
+    layout: "epic-0",
+    palette: "new-24",
+    background: "bg-7-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "luminous",
+  },
+  history: {
+    layout: "history-0",
+    palette: "new-25",
+    background: "bg-8-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  science: {
+    layout: "science-0",
+    palette: "new-26",
+    background: "bg-9-5",
+    elements: [],
+    font: "sans",
+    artOpacity: 90,
+    visualMode: "luminous",
+  },
+  mind: {
+    layout: "mind-0",
+    palette: "new-27",
+    background: "bg-10-5",
+    elements: [],
+    font: "sans",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  business: {
+    layout: "business-0",
+    palette: "new-28",
+    background: "bg-11-5",
+    elements: [],
+    font: "sans",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  mystery: {
+    layout: "mystery-0",
+    palette: "new-29",
+    background: "bg-12-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "luminous",
+  },
+  nature: {
+    layout: "nature-0",
+    palette: "new-30",
+    background: "bg-13-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  children: {
+    layout: "children-0",
+    palette: "new-31",
+    background: "bg-14-5",
+    elements: [],
+    font: "sans",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  biography: {
+    layout: "biography-0",
+    palette: "new-32",
+    background: "bg-15-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  philosophy: {
+    layout: "philosophy-0",
+    palette: "new-33",
+    background: "bg-16-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  poetry: {
+    layout: "poetry-0",
+    palette: "new-34",
+    background: "bg-17-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "painted",
+  },
+  library: {
+    layout: "library-0",
+    palette: "new-35",
+    background: "bg-18-5",
+    elements: [],
+    font: "serif",
+    artOpacity: 90,
+    visualMode: "painted",
   },
 };

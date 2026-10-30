@@ -1,3 +1,5 @@
+import { ClassicMotif } from "./ClassicScene";
+import { INITIAL } from "./catalog";
 import { MOTIFS } from "./catalog";
 const centerPaths = [
   "M50 15a35 35 0 1 0 0 70a35 35 0 1 0 0-70 M5 70Q50 0 95 30Q50 100 5 70 M20 8Q90 30 80 90",
@@ -107,13 +109,23 @@ export function MotifArt({
   id,
   color,
   thumbnail = false,
+  mode = "painted",
 }: {
   id: string;
   color: string;
   thumbnail?: boolean;
+  mode?: string;
 }) {
   const motif = MOTIFS.find((m) => m.id === id);
   if (!motif) return null;
+  if (id.startsWith("original:"))
+    return (
+      <div className="original-art-thumb">
+        <div>
+          <ClassicMotif id={id} design={INITIAL} />
+        </div>
+      </div>
+    );
   const path = {
     center: centerPaths,
     side: sidePaths,
@@ -129,7 +141,11 @@ export function MotifArt({
         stroke={color}
         strokeWidth="1.5"
       >
-        <path d={path} />
+        <path
+          d={path}
+          fill={mode === "line" ? "none" : color}
+          fillOpacity={mode === "line" ? 0 : 0.16}
+        />
       </svg>
     );
   const transforms = {
@@ -144,17 +160,33 @@ export function MotifArt({
       className="motif-art"
       aria-hidden="true"
       fill="none"
+      style={{
+        filter:
+          mode === "luminous"
+            ? `drop-shadow(0 0 4px ${color})`
+            : mode === "painted"
+              ? "drop-shadow(0 5px 4px #0004)"
+              : undefined,
+      }}
       stroke={color}
       strokeWidth={motif.category === "bottom" ? 0.55 : 1.2}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
       <g transform={transforms[motif.category]}>
-        <path d={path} />
+        <path
+          d={path}
+          fill={mode === "line" ? "none" : color}
+          fillOpacity={mode === "line" ? 0 : 0.16}
+        />
       </g>
       {motif.category === "side" && (
         <g transform="translate(965 115) scale(-1.1 1.8)">
-          <path d={path} />
+          <path
+            d={path}
+            fill={mode === "line" ? "none" : color}
+            fillOpacity={mode === "line" ? 0 : 0.16}
+          />
         </g>
       )}
     </svg>
