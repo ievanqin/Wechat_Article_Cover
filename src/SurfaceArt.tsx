@@ -24,7 +24,80 @@ export function SurfacePattern({
 }) {
   const id = "stamp-" + useId().replace(/:/g, "");
   const shape =
-    kind === "dots" ? (
+    kind === "contours" ? (
+      <>
+        {Array.from({ length: 7 }, (_, i) => (
+          <ellipse
+            key={i}
+            cx="40"
+            cy="40"
+            rx={9 + i * 7}
+            ry={5 + i * 5}
+            transform="rotate(-25 40 40)"
+          />
+        ))}
+      </>
+    ) : kind === "hexagons" ? (
+      <path d="M20 5L60 5L80 40L60 75H20L0 40ZM20 5L20-5M60 75V85M0 40H-10M80 40H90" />
+    ) : kind === "diagonal" ? (
+      <path d="M-40 80L40 0M-20 80L60 0M0 80L80 0M20 80L100 0M40 80L120 0" />
+    ) : kind === "checker" ? (
+      <path d="M0 0H40V40H0ZM40 40H80V80H40Z" fill={color} stroke="none" />
+    ) : kind === "circuits" ? (
+      <>
+        <path d="M0 20H20L40 40V80M80 15H60V35L40 55M0 65H16V42M60 80V60H80" />
+        <circle cx="20" cy="20" r="3" />
+        <circle cx="60" cy="15" r="3" />
+        <circle cx="16" cy="42" r="3" />
+      </>
+    ) : kind === "bubbles" ? (
+      <>
+        <circle cx="25" cy="25" r="18" />
+        <circle cx="61" cy="53" r="23" />
+        <circle cx="12" cy="69" r="6" />
+        <circle cx="68" cy="11" r="7" />
+        <path d="M15 18Q20 10 29 12M47 44Q54 32 64 35" />
+      </>
+    ) : kind === "petals" ? (
+      <g transform="translate(40 40)">
+        {[0, 90, 180, 270].map((a) => (
+          <path
+            key={a}
+            transform={`rotate(${a})`}
+            d="M0 0Q-30-40 0-35Q30-40 0 0Z"
+          />
+        ))}
+      </g>
+    ) : kind === "isometric" ? (
+      <path d="M40 2L75 22V62L40 82L5 62V22ZM5 22L40 42L75 22M40 42V82M40 2V-10M5 62L-10 71M75 62L90 71" />
+    ) : kind === "soundlines" ? (
+      <>
+        {Array.from({ length: 15 }, (_, i) => (
+          <path
+            key={i}
+            d={`M${i * 5 + 5} ${40 - 10 - 22 * Math.sin(i * 0.5) ** 2}V${40 + 10 + 22 * Math.sin(i * 0.5) ** 2}`}
+          />
+        ))}
+      </>
+    ) : kind === "orbitals" ? (
+      <>
+        <ellipse
+          cx="40"
+          cy="40"
+          rx="36"
+          ry="13"
+          transform="rotate(-35 40 40)"
+        />
+        <ellipse
+          cx="40"
+          cy="40"
+          rx="13"
+          ry="36"
+          transform="rotate(-35 40 40)"
+        />
+        <circle cx="40" cy="40" r="7" />
+      </>
+    ) : kind === "dots" ? (
       <circle cx="15" cy="15" r="2" fill={color} />
     ) : kind === "grid" ? (
       <path d="M0 0H80V80" />

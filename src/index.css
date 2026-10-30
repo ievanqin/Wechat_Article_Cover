@@ -4575,3 +4575,133 @@ body,
   padding-left: 3px;
   padding-right: 3px;
 }
+
+/* More independent compositions for sculpture, exhibition and reading covers. */
+.cover-canvas[data-composition="corner"] {
+  --layout-art-x: 35px;
+  --layout-art-y: -55px;
+  --layout-art-scale: 1.12;
+}
+.cover-canvas[data-composition="corner"] .cover-copy {
+  left: 55px !important;
+  top: 202px !important;
+  width: 470px !important;
+  height: 180px !important;
+}
+.cover-canvas[data-composition="corner"] .cover-eyebrow,
+.cover-canvas[data-composition="corner"] .cover-author {
+  display: none !important;
+}
+.cover-canvas[data-composition="rightvertical"] {
+  --layout-art-x: -430px;
+}
+.cover-canvas[data-composition="rightvertical"] .cover-copy {
+  writing-mode: vertical-rl !important;
+  left: 635px !important;
+  top: 105px !important;
+  width: 290px !important;
+  height: 260px !important;
+}
+.cover-canvas[data-composition="rightvertical"] .cover-title {
+  writing-mode: vertical-rl !important;
+  font-size: calc(var(--title-size) * 0.8) !important;
+}
+.cover-canvas[data-composition="rightvertical"] .cover-subtitle {
+  writing-mode: vertical-rl !important;
+  max-width: 65px !important;
+  margin: 0 18px !important;
+  font-size: 12px !important;
+}
+.cover-canvas[data-composition="rightvertical"] .cover-eyebrow,
+.cover-canvas[data-composition="rightvertical"] .cover-author,
+.cover-canvas[data-composition="rightvertical"] .cover-rule {
+  display: none !important;
+}
+.cover-canvas[data-composition="widebanner"] {
+  --layout-art-x: -15px;
+  --layout-art-y: 100px;
+  --layout-art-scale: 0.77;
+}
+.cover-canvas[data-composition="widebanner"] .cover-copy {
+  top: 96px !important;
+  left: 55px !important;
+  width: 870px !important;
+  height: 160px !important;
+}
+.cover-canvas[data-composition="widebanner"] .cover-title {
+  font-size: calc(var(--title-size) * 0.8) !important;
+}
+.cover-canvas[data-composition="widebanner"] .cover-subtitle {
+  max-width: 400px !important;
+}
+.cover-canvas[data-composition="widebanner"] .cover-author,
+.cover-canvas[data-composition="widebanner"] .cover-rule {
+  display: none !important;
+}
+.cover-canvas[data-composition="exhibit"] {
+  --layout-art-x: -15px;
+  --layout-art-scale: 1.12;
+}
+.cover-canvas[data-composition="exhibit"] .cover-copy {
+  left: 60px !important;
+  top: 155px !important;
+  width: 320px !important;
+  height: 215px !important;
+  border-left: 2px solid var(--accent);
+  padding-left: 22px !important;
+}
+.cover-canvas[data-composition="exhibit"] .cover-title {
+  font-size: calc(var(--title-size) * 0.73) !important;
+}
+.cover-canvas[data-composition="exhibit"] .cover-eyebrow {
+  font-size: 8px !important;
+  letter-spacing: 1px;
+}
+.cover-canvas[data-composition="exhibit"] .cover-subtitle {
+  font-size: 11px !important;
+}
+.cover-canvas[data-composition="exhibit"] .cover-rule {
+  display: none !important;
+}
+.cover-canvas[data-composition="centralstage"] {
+  --layout-art-x: -235px;
+  --layout-art-y: -65px;
+  --layout-art-scale: 0.86;
+}
+.cover-canvas[data-composition="centralstage"] .cover-copy {
+  left: 90px !important;
+  top: 295px !important;
+  width: 820px !important;
+  height: 90px !important;
+  text-align: center !important;
+}
+.cover-canvas[data-composition="centralstage"] .cover-title {
+  font-size: calc(var(--title-size) * 0.6) !important;
+}
+.cover-canvas[data-composition="centralstage"] .cover-subtitle {
+  font-size: 11px !important;
+  margin-top: 8px !important;
+}
+.cover-canvas[data-composition="centralstage"] .cover-eyebrow,
+.cover-canvas[data-composition="centralstage"] .cover-author,
+.cover-canvas[data-composition="centralstage"] .cover-rule {
+  display: none !important;
+}
+.cover-canvas[data-composition="offset"] {
+  --layout-art-x: 55px;
+  --layout-art-y: 60px;
+  --layout-art-scale: 1.08;
+}
+.cover-canvas[data-composition="offset"] .cover-copy {
+  left: 75px !important;
+  top: 102px !important;
+  width: 465px !important;
+  height: 250px !important;
+}
+.cover-canvas[data-composition="offset"] .cover-title {
+  font-size: calc(var(--title-size) * 0.87) !important;
+}
+.cover-canvas[data-composition="offset"] .cover-rule {
+  width: 110px !important;
+}
+.cover-canvas[data-composition="centralstage"] {--layout-art-y:-40px;--layout-art-scale:.72;}

@@ -22,6 +22,294 @@ export function VirtualArt({
   );
   const body = (() => {
     switch (kind) {
+      case "wavefold":
+        return (
+          <g transform="rotate(-16 260 180)">
+            {Array.from({ length: 33 }, (_, i) => {
+              const t = i / 32,
+                y = 65 + i * 7;
+              return (
+                <path
+                  key={i}
+                  d={`M85 ${y}C170 ${y - 100 * Math.sin(t * 3.14)} 310 ${y + 110 * Math.sin(t * 3.14)} 437 ${y - 55}`}
+                  fill="none"
+                  stroke={paint("chrome")}
+                  strokeWidth="6"
+                />
+              );
+            })}
+            <path
+              d="M85 65L85 290M437 10L437 234"
+              stroke={accent}
+              opacity=".25"
+            />
+          </g>
+        );
+      case "torusfield":
+        return (
+          <g transform="rotate(-28 260 180)">
+            {Array.from({ length: 42 }, (_, i) => {
+              const a = (i * Math.PI * 2) / 42,
+                x = 260 + 139 * Math.cos(a),
+                y = 180 + 80 * Math.sin(a);
+              return (
+                <ellipse
+                  key={i}
+                  cx={x}
+                  cy={y}
+                  rx={19 + 11 * Math.sin(a) ** 2}
+                  ry="67"
+                  transform={`rotate(${(i * 360) / 42 + 40} ${x} ${y})`}
+                  fill="none"
+                  stroke={paint("chrome")}
+                  strokeWidth="5"
+                />
+              );
+            })}
+          </g>
+        );
+      case "silkhelix":
+        return (
+          <>
+            {Array.from({ length: 27 }, (_, i) => (
+              <path
+                key={i}
+                d={`M${91 + i * 3} ${55 + i * 2}C${490 - i * 2} ${85 + i * 2} ${24 + i * 3} ${282 - i * 2} ${385 + i * 2} ${302 - i * 2}`}
+                fill="none"
+                stroke={paint("spectrum")}
+                strokeWidth="2.2"
+                opacity={0.5 + i / 54}
+              />
+            ))}
+            <ellipse cx="400" cy="297" rx="35" ry="12" fill={paint("glass")} />
+          </>
+        );
+      case "bubblecluster":
+        return (
+          <>
+            {[
+              [190, 102, 69],
+              [302, 93, 73],
+              [360, 191, 83],
+              [238, 225, 92],
+              [133, 206, 62],
+              [307, 294, 44],
+              [402, 57, 20],
+              [80, 92, 16],
+            ].map(([x, y, r], i) => (
+              <g key={i}>
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={r}
+                  fill={paint("gel")}
+                  fillOpacity=".89"
+                  stroke="#fff8"
+                  strokeWidth="1.2"
+                />
+                <ellipse
+                  cx={x - r * 0.3}
+                  cy={y - r * 0.5}
+                  rx={r * 0.28}
+                  ry={r * 0.13}
+                  fill="white"
+                  opacity=".64"
+                  transform={`rotate(-28 ${x} ${y})`}
+                />
+                <path
+                  d={`M${x - r * 0.6} ${y + r * 0.4}Q${x} ${y + r * 0.95} ${x + r * 0.55} ${y + r * 0.3}`}
+                  fill="none"
+                  stroke="white"
+                  opacity=".24"
+                  strokeWidth="2"
+                />
+              </g>
+            ))}
+          </>
+        );
+      case "pillowstack":
+        return (
+          <>
+            {[
+              [160, 245, -13],
+              [278, 205, 12],
+              [195, 142, -9],
+              [300, 91, 17],
+            ].map(([x, y, a], i) => (
+              <g key={i} transform={`rotate(${a} ${x} ${y})`}>
+                <rect
+                  x={x - 90}
+                  y={y - 50}
+                  width="180"
+                  height="100"
+                  rx="34"
+                  fill={paint("gel")}
+                />
+                <rect
+                  x={x - 79}
+                  y={y - 41}
+                  width="158"
+                  height="80"
+                  rx="28"
+                  fill="none"
+                  stroke="#fffb"
+                  strokeWidth="1"
+                />
+                <path
+                  d={`M${x - 57} ${y - 32}Q${x} ${y - 49} ${x + 45} ${y - 28}`}
+                  stroke="white"
+                  opacity=".5"
+                  strokeWidth="5"
+                  fill="none"
+                />
+              </g>
+            ))}
+            <ellipse
+              cx="260"
+              cy="319"
+              rx="165"
+              ry="12"
+              fill="#62352f"
+              opacity=".13"
+            />
+          </>
+        );
+      case "gummyorbit":
+        return (
+          <>
+            <g transform="rotate(-28 260 180)">
+              <ellipse
+                cx="260"
+                cy="194"
+                rx="180"
+                ry="103"
+                fill="none"
+                stroke="#382058"
+                strokeWidth="55"
+              />
+              <ellipse
+                cx="260"
+                cy="179"
+                rx="180"
+                ry="103"
+                fill="none"
+                stroke={paint("gel")}
+                strokeWidth="48"
+              />
+              <ellipse
+                cx="260"
+                cy="166"
+                rx="180"
+                ry="103"
+                fill="none"
+                stroke="white"
+                strokeWidth="2"
+                opacity=".5"
+              />
+            </g>
+            <circle
+              cx="264"
+              cy="143"
+              r="57"
+              fill={paint("glass")}
+              stroke="#fff9"
+            />
+            <circle cx="425" cy="63" r="24" fill={paint("gel")} />
+            <circle cx="108" cy="291" r="17" fill={paint("gel")} />
+          </>
+        );
+      case "holostack":
+        return (
+          <g transform="rotate(-17 260 180)">
+            {Array.from({ length: 7 }, (_, i) => {
+              const x = 95 + i * 30,
+                y = 50 + i * 17;
+              return (
+                <g key={i}>
+                  <path
+                    d={`M${x} ${y}L${x + 165} ${y - 24}V${y + 193}L${x} ${y + 215}Z`}
+                    fill={paint("glass")}
+                    fillOpacity=".62"
+                    stroke={i % 2 ? "#f0d1ff" : "#a4fff6"}
+                    strokeWidth="1.3"
+                  />
+                  <path
+                    d={`M${x + 9} ${y + 11}L${x + 155} ${y - 12}`}
+                    stroke="white"
+                    opacity=".7"
+                  />
+                  <path
+                    d={`M${x + 15} ${y + 183}L${x + 145} ${y + 165}`}
+                    stroke={paint("spectrum")}
+                    strokeWidth="4"
+                  />
+                </g>
+              );
+            })}
+          </g>
+        );
+      case "spectraldoor":
+        return (
+          <>
+            <ellipse
+              cx="265"
+              cy="325"
+              rx="178"
+              ry="17"
+              fill={paint("spectrum")}
+              opacity=".35"
+            />
+            {Array.from({ length: 6 }, (_, i) => {
+              const x = 110 + i * 23,
+                y = 19 + i * 20,
+                w = 300 - i * 40,
+                h = 292 - i * 32;
+              return (
+                <g key={i} transform={`rotate(${i * 3 - 9} 260 180)`}>
+                  <path
+                    d={`M${x} ${y + h}V${y + 62}Q${x} ${y} ${x + w / 2} ${y}Q${x + w} ${y} ${x + w} ${y + 62}V${y + h}H${x + w - 17}V${y + 65}Q${x + w - 17} ${y + 19} ${x + w / 2} ${y + 19}Q${x + 17} ${y + 19} ${x + 17} ${y + 65}V${y + h}Z`}
+                    fill={paint("glass")}
+                    stroke={i % 2 ? accent : "#e8dbff"}
+                    strokeWidth="1.5"
+                  />
+                </g>
+              );
+            })}
+            <circle cx="270" cy="220" r="35" fill={paint("spectrum")} />
+          </>
+        );
+      case "glassbloom":
+        return (
+          <>
+            {Array.from({ length: 8 }, (_, i) => (
+              <g key={i} transform={`rotate(${i * 45} 260 180)`}>
+                <path
+                  d="M260 180C185 155 119 59 181 33C249 5 294 95 260 180Z"
+                  fill={paint("glass")}
+                  stroke="#d7fff3"
+                  strokeWidth="1"
+                  fillOpacity=".75"
+                />
+                <path
+                  d="M260 180Q166 71 195 49"
+                  fill="none"
+                  stroke="white"
+                  opacity=".35"
+                />
+              </g>
+            ))}
+            <circle cx="260" cy="180" r="47" fill={paint("spectrum")} />
+            <ellipse
+              cx="246"
+              cy="161"
+              rx="17"
+              ry="8"
+              fill="white"
+              opacity=".6"
+            />
+          </>
+        );
+
       case "metal":
         return (
           <>

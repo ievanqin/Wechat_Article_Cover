@@ -454,6 +454,69 @@ export const FAMILIES = [
     desc: "墨液晕染、浓淡叠流与宣纸留白",
     color: "#dce4de",
   },
+  {
+    id: "wavefold",
+    name: "声波褶幕",
+    en: "WAVEFOLD",
+    desc: "悬浮的褶皱薄片与渐进声浪",
+    color: "#101e30",
+  },
+  {
+    id: "torusfield",
+    name: "环面磁场",
+    en: "TORUSFIELD",
+    desc: "密集环片构成的扭转环面",
+    color: "#121e25",
+  },
+  {
+    id: "silkhelix",
+    name: "丝带螺旋",
+    en: "SILKHELIX",
+    desc: "流动的丝线与参数化双螺旋",
+    color: "#25102c",
+  },
+  {
+    id: "bubblecluster",
+    name: "泡泡共生",
+    en: "BUBBLECLUSTER",
+    desc: "挤压的透明软球与高光气泡",
+    color: "#2c1444",
+  },
+  {
+    id: "pillowstack",
+    name: "充气积木",
+    en: "PILLOWSTACK",
+    desc: "柔软枕形方块与漂浮空间",
+    color: "#f2dfce",
+  },
+  {
+    id: "gummyorbit",
+    name: "软糖轨道",
+    en: "GUMMYORBIT",
+    desc: "半透明糖环与软胶行星",
+    color: "#151a49",
+  },
+  {
+    id: "holostack",
+    name: "全息切片",
+    en: "HOLOSTACK",
+    desc: "错位透明玻璃片与光谱边缘",
+    color: "#0b192f",
+  },
+  {
+    id: "spectraldoor",
+    name: "光谱之门",
+    en: "SPECTRALDOOR",
+    desc: "悬浮光门与虹彩空间层次",
+    color: "#1a1331",
+  },
+  {
+    id: "glassbloom",
+    name: "琉璃花舱",
+    en: "GLASSBLOOM",
+    desc: "旋转玻璃花瓣与悬浮核心",
+    color: "#071f25",
+  },
 ] as const;
 export type Family = (typeof FAMILIES)[number]["id"];
 export type Palette = {
@@ -544,6 +607,15 @@ const newColors: [string, string, string, string, Family][] = [
   ["柔软纪念碑", "#f0d9ce", "#1b2027", "#784555", "softmonument"],
   ["超维花体", "#191322", "#f5f7ff", "#e8c4ff", "hyperflower"],
   ["缎带风暴", "#081c40", "#f5f7ff", "#9ec9ff", "ribbonstorm"],
+  ["声波褶幕", "#101e30", "#f2f7ff", "#9be5ff", "wavefold"],
+  ["环面磁场", "#121e25", "#f2f7ff", "#baffce", "torusfield"],
+  ["丝带螺旋", "#25102c", "#f2f7ff", "#e4b0ff", "silkhelix"],
+  ["泡泡共生", "#2c1444", "#f2f7ff", "#ffb8e2", "bubblecluster"],
+  ["充气积木", "#f2dfce", "#533e3b", "#e8ae8c", "pillowstack"],
+  ["软糖轨道", "#151a49", "#f2f7ff", "#b5bcff", "gummyorbit"],
+  ["全息切片", "#0b192f", "#f2f7ff", "#b9fff5", "holostack"],
+  ["光谱之门", "#1a1331", "#f2f7ff", "#dfc1ff", "spectraldoor"],
+  ["琉璃花舱", "#071f25", "#f2f7ff", "#b2efe1", "glassbloom"],
 ];
 export const PALETTES: Palette[] = [
   ...newColors.map(([name, bg, ink, accent, family], i) => ({
@@ -566,6 +638,16 @@ export const PALETTES: Palette[] = [
   })),
 ];
 const names: Record<Family, string[]> = {
+  wavefold: ["声波褶幕 · 侧场", "声波褶幕 · 对开", "声波褶幕 · 中轴"],
+  torusfield: ["环面磁场 · 侧场", "环面磁场 · 对开", "环面磁场 · 中轴"],
+  silkhelix: ["丝带螺旋 · 侧场", "丝带螺旋 · 对开", "丝带螺旋 · 中轴"],
+  bubblecluster: ["泡泡共生 · 侧场", "泡泡共生 · 对开", "泡泡共生 · 中轴"],
+  pillowstack: ["充气积木 · 侧场", "充气积木 · 对开", "充气积木 · 中轴"],
+  gummyorbit: ["软糖轨道 · 侧场", "软糖轨道 · 对开", "软糖轨道 · 中轴"],
+  holostack: ["全息切片 · 侧场", "全息切片 · 对开", "全息切片 · 中轴"],
+  spectraldoor: ["光谱之门 · 侧场", "光谱之门 · 对开", "光谱之门 · 中轴"],
+  glassbloom: ["琉璃花舱 · 侧场", "琉璃花舱 · 对开", "琉璃花舱 · 中轴"],
+
   inkburst: ["泼墨主场", "墨圈留白", "飞白长卷"],
   inkflow: ["流墨侧记", "墨河对开", "浓淡中轴"],
   mercury: [
@@ -950,6 +1032,42 @@ export const COMPOSITIONS = [
     hint: "大标题与小幅主视觉",
   },
   { id: "frame", name: "留白画框", group: "居中", hint: "居中排版与细线画框" },
+  {
+    id: "corner",
+    name: "角落留白",
+    group: "分区",
+    hint: "标题收在左下，主体向右上延展",
+  },
+  {
+    id: "rightvertical",
+    name: "右侧竖题",
+    group: "海报",
+    hint: "竖排标题在右，主体移到左侧",
+  },
+  {
+    id: "widebanner",
+    name: "横幅标题",
+    group: "上下",
+    hint: "顶端宽幅标题，右下展示主体",
+  },
+  {
+    id: "exhibit",
+    name: "展览标签",
+    group: "分区",
+    hint: "紧凑展签与大幅雕塑",
+  },
+  {
+    id: "centralstage",
+    name: "中心展台",
+    group: "居中",
+    hint: "主体居中，标题作为底部展签",
+  },
+  {
+    id: "offset",
+    name: "错位重心",
+    group: "海报",
+    hint: "上方短标题与偏移主视觉",
+  },
 ] as const;
 export type CompositionId = (typeof COMPOSITIONS)[number]["id"] | "legacy";
 export const WATERMARKS = [
@@ -962,6 +1080,16 @@ export const WATERMARKS = [
   { id: "arches", name: "拱门" },
   { id: "ink", name: "墨渍" },
   { id: "grain", name: "纸上墨点" },
+  { id: "contours", name: "等高线" },
+  { id: "hexagons", name: "蜂巢" },
+  { id: "diagonal", name: "斜线" },
+  { id: "checker", name: "棋盘" },
+  { id: "circuits", name: "电路" },
+  { id: "bubbles", name: "气泡" },
+  { id: "petals", name: "花瓣" },
+  { id: "isometric", name: "立体方格" },
+  { id: "soundlines", name: "声波" },
+  { id: "orbitals", name: "轨道" },
 ] as const;
 export interface Design {
   composition: CompositionId;
@@ -1061,6 +1189,79 @@ export const INITIAL: Design = {
   font: "serif",
 };
 export const PRESETS: Record<Family, Partial<Design>> = {
+  wavefold: {
+    palette: PALETTES.find((p) => p.family === "wavefold")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "sans",
+    titleSize: 60,
+  },
+  torusfield: {
+    palette: PALETTES.find((p) => p.family === "torusfield")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "sans",
+    titleSize: 60,
+  },
+  silkhelix: {
+    palette: PALETTES.find((p) => p.family === "silkhelix")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "sans",
+    titleSize: 60,
+  },
+  bubblecluster: {
+    palette: PALETTES.find((p) => p.family === "bubblecluster")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "rounded",
+    titleSize: 60,
+  },
+  pillowstack: {
+    palette: PALETTES.find((p) => p.family === "pillowstack")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "rounded",
+    titleSize: 60,
+  },
+  gummyorbit: {
+    palette: PALETTES.find((p) => p.family === "gummyorbit")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "rounded",
+    titleSize: 60,
+  },
+  holostack: {
+    palette: PALETTES.find((p) => p.family === "holostack")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "sans",
+    titleSize: 60,
+  },
+  spectraldoor: {
+    palette: PALETTES.find((p) => p.family === "spectraldoor")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "sans",
+    titleSize: 60,
+  },
+  glassbloom: {
+    palette: PALETTES.find((p) => p.family === "glassbloom")!.id,
+    visualMode: "painted",
+    artOpacity: 100,
+    ornament: false,
+    font: "sans",
+    titleSize: 60,
+  },
+
   inkburst: {
     palette: PALETTES.find((p) => p.family === "inkwash")!.id,
     background: "bg-61-1",
@@ -1784,9 +1985,47 @@ MOTIFS.push(
 );
 export const THEME_GROUPS = [
   {
+    id: "parametric-series",
+    name: "参数曲面",
+    families: ["parametric", "wavefold", "torusfield", "silkhelix"],
+  },
+  {
+    id: "soft-series",
+    name: "软胶体积",
+    families: [
+      "jellydream",
+      "softmonument",
+      "bubblecluster",
+      "pillowstack",
+      "gummyorbit",
+    ],
+  },
+  {
+    id: "holo-series",
+    name: "全息玻璃",
+    families: [
+      "holoartifact",
+      "prismcore",
+      "glassribbon",
+      "holostack",
+      "spectraldoor",
+      "glassbloom",
+    ],
+  },
+
+  {
     id: "experimental",
     name: "先锋抽象",
     families: [
+      "wavefold",
+      "torusfield",
+      "silkhelix",
+      "bubblecluster",
+      "pillowstack",
+      "gummyorbit",
+      "holostack",
+      "spectraldoor",
+      "glassbloom",
       "mercury",
       "prismcore",
       "jellydream",
@@ -1805,6 +2044,9 @@ export const THEME_GROUPS = [
     id: "featured",
     name: "精选",
     families: [
+      "wavefold",
+      "bubblecluster",
+      "holostack",
       "mercury",
       "prismcore",
       "jellydream",
@@ -1882,6 +2124,15 @@ export const THEME_GROUPS = [
     id: "dimensional",
     name: "3D 材质",
     families: [
+      "wavefold",
+      "torusfield",
+      "silkhelix",
+      "bubblecluster",
+      "pillowstack",
+      "gummyorbit",
+      "holostack",
+      "spectraldoor",
+      "glassbloom",
       "mercury",
       "prismcore",
       "jellydream",
@@ -1948,6 +2199,16 @@ export const THEME_GROUPS = [
 ] as const;
 
 export const EXPERIMENTAL_ART = {
+  wavefold: "wavefold",
+  torusfield: "torusfield",
+  silkhelix: "silkhelix",
+  bubblecluster: "bubblecluster",
+  pillowstack: "pillowstack",
+  gummyorbit: "gummyorbit",
+  holostack: "holostack",
+  spectraldoor: "spectraldoor",
+  glassbloom: "glassbloom",
+
   mercury: "metal",
   prismcore: "prism",
   jellydream: "jelly",
@@ -1994,5 +2255,25 @@ MOTIFS.push(
     category: "center" as const,
     family: family as Family,
     shape: -7,
+  })),
+);
+
+MOTIFS.push(
+  ...[
+    ["wavefold", "声波褶幕 · 独立雕塑", "wavefold"],
+    ["torusfield", "环面磁场 · 独立雕塑", "torusfield"],
+    ["silkhelix", "丝带螺旋 · 独立雕塑", "silkhelix"],
+    ["bubblecluster", "泡泡共生 · 独立雕塑", "bubblecluster"],
+    ["pillowstack", "充气积木 · 独立雕塑", "pillowstack"],
+    ["gummyorbit", "软糖轨道 · 独立雕塑", "gummyorbit"],
+    ["holostack", "全息切片 · 独立雕塑", "holostack"],
+    ["spectraldoor", "光谱之门 · 独立雕塑", "spectraldoor"],
+    ["glassbloom", "琉璃花舱 · 独立雕塑", "glassbloom"],
+  ].map(([id, name, family]) => ({
+    id: "virtual:" + id,
+    name,
+    category: "center" as const,
+    family: family as Family,
+    shape: -6,
   })),
 );
