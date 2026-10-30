@@ -997,9 +997,9 @@ MOTIFS.push(
   })),
 );
 export const COMPOSITIONS = [
-  { id: "left", name: "左文右图", group: "分区", hint: "文字在左，主体在右" },
-  { id: "right", name: "左图右文", group: "分区", hint: "主体在左，文字在右" },
-  { id: "split", name: "对半分栏", group: "分区", hint: "文字与图形各占一半" },
+  { id: "left", name: "左文右图", group: "左右", hint: "文字在左，主体在右" },
+  { id: "right", name: "左图右文", group: "左右", hint: "主体在左，文字在右" },
+  { id: "split", name: "对半分栏", group: "左右", hint: "文字与图形各占一半" },
   {
     id: "center",
     name: "居中标题",
@@ -1016,32 +1016,32 @@ export const COMPOSITIONS = [
   {
     id: "diagonal",
     name: "倾斜海报",
-    group: "海报",
+    group: "左右",
     hint: "倾斜标题与放大的主体",
   },
   {
     id: "vertical",
     name: "竖排题签",
-    group: "海报",
+    group: "左右",
     hint: "竖排中文，侧边插画",
   },
   {
     id: "oversize",
     name: "大字宣言",
-    group: "海报",
+    group: "左右",
     hint: "大标题与小幅主视觉",
   },
   { id: "frame", name: "留白画框", group: "居中", hint: "居中排版与细线画框" },
   {
     id: "corner",
     name: "角落留白",
-    group: "分区",
+    group: "左右",
     hint: "标题收在左下，主体向右上延展",
   },
   {
     id: "rightvertical",
     name: "右侧竖题",
-    group: "海报",
+    group: "左右",
     hint: "竖排标题在右，主体移到左侧",
   },
   {
@@ -1053,7 +1053,7 @@ export const COMPOSITIONS = [
   {
     id: "exhibit",
     name: "展览标签",
-    group: "分区",
+    group: "左右",
     hint: "紧凑展签与大幅雕塑",
   },
   {
@@ -1065,8 +1065,44 @@ export const COMPOSITIONS = [
   {
     id: "offset",
     name: "错位重心",
-    group: "海报",
+    group: "左右",
     hint: "上方短标题与偏移主视觉",
+  },
+  {
+    id: "doubleframe",
+    name: "双线书封",
+    group: "居中",
+    hint: "双线边框与居中标题",
+  },
+  {
+    id: "archframe",
+    name: "拱形画廊",
+    group: "居中",
+    hint: "圆拱边框与中央展签",
+  },
+  {
+    id: "ovalframe",
+    name: "椭圆藏书票",
+    group: "居中",
+    hint: "椭圆装帧与居中留白",
+  },
+  {
+    id: "cornerframe",
+    name: "四角题框",
+    group: "居中",
+    hint: "角线装帧与居中标题",
+  },
+  {
+    id: "centerband",
+    name: "中轴横带",
+    group: "居中",
+    hint: "中央横带与上下细线",
+  },
+  {
+    id: "centertop",
+    name: "中轴上题",
+    group: "居中",
+    hint: "居中大标题与下方主视觉",
   },
 ] as const;
 export type CompositionId = (typeof COMPOSITIONS)[number]["id"] | "legacy";
@@ -1090,6 +1126,16 @@ export const WATERMARKS = [
   { id: "isometric", name: "立体方格" },
   { id: "soundlines", name: "声波" },
   { id: "orbitals", name: "轨道" },
+  { id: "scene-ridges", name: "全幅山脊" },
+  { id: "scene-orbits", name: "天体轨道" },
+  { id: "scene-tides", name: "流动海潮" },
+  { id: "scene-vault", name: "穹顶透视" },
+  { id: "scene-rays", name: "放射光场" },
+  { id: "mix-reading", name: "书页与星芒" },
+  { id: "mix-botanical", name: "枝叶与月相" },
+  { id: "mix-celestial", name: "宇宙漫游" },
+  { id: "mix-geometry", name: "几何拼贴" },
+  { id: "mix-inkscape", name: "墨山与飞鸟" },
 ] as const;
 export interface Design {
   composition: CompositionId;
@@ -1098,6 +1144,7 @@ export interface Design {
   gradientColor: string;
   gradientAngle: number;
   watermark: (typeof WATERMARKS)[number]["id"];
+  watermarkVisible: boolean;
   watermarkOpacity: number;
   watermarkScale: number;
   watermarkColor: string;
@@ -1147,6 +1194,7 @@ export const INITIAL: Design = {
   gradientColor: "#6754a2",
   gradientAngle: 135,
   watermark: "none",
+  watermarkVisible: true,
   watermarkOpacity: 15,
   watermarkScale: 100,
   watermarkColor: "",

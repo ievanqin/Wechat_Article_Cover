@@ -96,6 +96,13 @@ export function LayerPanel({
           {d.showThemeArtwork ? "图形已显示" : "图形已隐藏"}
         </button>
       </div>
+      {d.watermark !== "none" &&
+        row(
+          "背景图案",
+          d.watermarkVisible,
+          () => onChange({ watermarkVisible: !d.watermarkVisible }),
+          "watermark",
+        )}
       {row(
         "品牌徽章",
         d.showBrand,

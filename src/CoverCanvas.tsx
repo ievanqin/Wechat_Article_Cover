@@ -123,12 +123,14 @@ export const CoverCanvas = forwardRef<
           </div>
         </>
       )}
-      <SurfacePattern
-        kind={d.watermark}
-        color={d.watermarkColor || p.accent}
-        opacity={d.watermarkOpacity / 100}
-        scale={d.watermarkScale}
-      />
+      {d.watermarkVisible && (
+        <SurfacePattern
+          kind={d.watermark}
+          color={d.watermarkColor || p.accent}
+          opacity={d.watermarkOpacity / 100}
+          scale={d.watermarkScale}
+        />
+      )}
       {d.showThemeArtwork && (
         <div
           className="artwork-layer"

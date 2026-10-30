@@ -27,6 +27,8 @@ function readDraft(): Design {
     const v = data?.version === 2 ? data.design : null;
     if (!v || typeof v !== "object") return INITIAL;
     const d = { ...INITIAL };
+    if (typeof v.watermarkVisible === "boolean")
+      d.watermarkVisible = v.watermarkVisible;
     if (
       COMPOSITIONS.some((c) => c.id === v.composition) ||
       v.composition === "legacy"
@@ -243,6 +245,15 @@ function App() {
   }>(() => ({ past: [], present: readDraft(), future: [] }));
   const d = history.present;
   const [tab, setTab] = useState<Tab>("copy");
+  const [patternGroup, setPatternGroup] = useState(
+    d.watermark.startsWith("scene-")
+      ? "整幅背景"
+      : d.watermark.startsWith("mix-")
+        ? "组合背景"
+        : "平铺纹样",
+  );
+  const [assetRequest, setAssetRequest] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [layoutGroup, setLayoutGroup] = useState("全部");
   const [showAllPalettes, setShowAllPalettes] = useState(false);
   const [familyFilter, setFamilyFilter] = useState<Family | "all">("all");
@@ -264,6 +275,25 @@ function App() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const exporting = useRef(false);
+  const openElements = () => {
+    setTab("elements");
+    setMobilePanel(true);
+    setQuery("");
+    setAssetGroup("all");
+    setCategory("center");
+    setAssetRequest((v) => v + 1);
+  };
+  useEffect(() => {
+    if (!assetRequest) return;
+    const frame = requestAnimationFrame(() => {
+      panelRef.current?.scrollTo({ top: 0, behavior: "auto" });
+      panelRef.current
+        ?.querySelector<HTMLInputElement>('[aria-label="搜索元素"]')
+        ?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [assetRequest]);
+
   const update = useCallback(
     (patch: Partial<Design>) =>
       setHistory((h) => ({
@@ -531,14 +561,17 @@ function App() {
               <button
                 key={t.id}
                 aria-pressed={tab === t.id}
-                onClick={() => setTab(t.id)}
+                onClick={() => {
+                  setTab(t.id);
+                  panelRef.current?.scrollTo({ top: 0 });
+                }}
               >
                 <b>{t.icon}</b>
                 {t.name}
               </button>
             ))}
           </nav>
-          <div className="panel-scroll">
+          <div className="panel-scroll" ref={panelRef}>
             <div className="panel-heading">
               <h1>{TABS.find((t) => t.id === tab)?.hint}</h1>
               <p>
@@ -662,7 +695,7 @@ function App() {
                   排版方式<span>只调整文字与图形的位置</span>
                 </div>
                 <div className="composition-filters" aria-label="构图分类">
-                  {["全部", "分区", "上下", "居中", "海报"].map((g) => (
+                  {["全部", "左右", "上下", "居中"].map((g) => (
                     <button
                       key={g}
                       aria-pressed={layoutGroup === g}
@@ -1039,14 +1072,48 @@ function App() {
                     : "查看全部配色（" + PALETTES.length + "）"}
                 </button>
                 <div className="section-label">
-                  背景图案<span>淡淡的底纹，不遮住正文</span>
+                  背景图案
+                  <button
+                    className="pattern-visibility"
+                    aria-label={
+                      d.watermarkVisible ? "隐藏背景图案" : "显示背景图案"
+                    }
+                    aria-pressed={d.watermarkVisible}
+                    onClick={() =>
+                      update({ watermarkVisible: !d.watermarkVisible })
+                    }
+                  >
+                    {d.watermarkVisible ? "◉ 显示中" : "⊘ 已隐藏"}
+                  </button>
+                </div>
+                <div className="composition-filters" aria-label="背景图案类型">
+                  {["平铺纹样", "整幅背景", "组合背景"].map((g) => (
+                    <button
+                      key={g}
+                      aria-pressed={patternGroup === g}
+                      onClick={() => setPatternGroup(g)}
+                    >
+                      {g}
+                    </button>
+                  ))}
                 </div>
                 <div className="watermark-grid">
-                  {WATERMARKS.map((w) => (
+                  {WATERMARKS.filter(
+                    (w) =>
+                      w.id === "none" ||
+                      (patternGroup === "整幅背景"
+                        ? w.id.startsWith("scene-")
+                        : patternGroup === "组合背景"
+                          ? w.id.startsWith("mix-")
+                          : !w.id.startsWith("scene-") &&
+                            !w.id.startsWith("mix-")),
+                  ).map((w) => (
                     <button
                       key={w.id}
                       aria-pressed={d.watermark === w.id}
-                      onClick={() => update({ watermark: w.id })}
+                      onClick={() =>
+                        update({ watermark: w.id, watermarkVisible: true })
+                      }
                     >
                       <div className={`watermark-sample stamp-${w.id}`}>
                         <SurfacePattern
@@ -1062,7 +1129,16 @@ function App() {
                 {d.watermark !== "none" && (
                   <>
                     {range("watermarkOpacity", "图案透明度", 0, 70, "%")}{" "}
-                    {range("watermarkScale", "图案大小", 50, 200, "%")}
+                    {range(
+                      "watermarkScale",
+                      d.watermark.startsWith("scene-") ||
+                        d.watermark.startsWith("mix-")
+                        ? "背景缩放"
+                        : "图案大小",
+                      50,
+                      200,
+                      "%",
+                    )}
                     <label className="fill-colors">
                       图案颜色
                       <input
@@ -1229,14 +1305,7 @@ function App() {
                     清空
                   </button>
                 </div>
-                <LayerPanel
-                  design={d}
-                  onChange={update}
-                  onAdd={() => {
-                    setQuery("");
-                    setCategory("center");
-                  }}
-                />
+                <LayerPanel design={d} onChange={update} onAdd={openElements} />
                 {range("artOpacity", "元素浓度", 10, 100, "%")}
                 {range("artScale", "元素大小", 60, 140, "%")}
                 <div className="quiet-note">
@@ -1352,14 +1421,7 @@ function App() {
                 </button>
               </header>
               {showLayers && (
-                <LayerPanel
-                  design={d}
-                  onChange={update}
-                  onAdd={() => {
-                    setTab("elements");
-                    setMobilePanel(true);
-                  }}
-                />
+                <LayerPanel design={d} onChange={update} onAdd={openElements} />
               )}
             </section>
           </div>

@@ -4704,4 +4704,151 @@ body,
 .cover-canvas[data-composition="offset"] .cover-rule {
   width: 110px !important;
 }
-.cover-canvas[data-composition="centralstage"] {--layout-art-y:-40px;--layout-art-scale:.72;}
+.cover-canvas[data-composition="centralstage"] {
+  --layout-art-y: -40px;
+  --layout-art-scale: 0.72;
+}
+
+/* Centered cover editions. Frames stay independent from the theme artwork. */
+.cover-canvas:is(
+  [data-composition="doubleframe"],
+  [data-composition="archframe"],
+  [data-composition="ovalframe"],
+  [data-composition="cornerframe"],
+  [data-composition="centerband"]
+) {
+  --layout-art-x: -220px;
+  --layout-art-opacity: 0.13;
+}
+.cover-canvas:is(
+    [data-composition="doubleframe"],
+    [data-composition="archframe"],
+    [data-composition="ovalframe"],
+    [data-composition="cornerframe"],
+    [data-composition="centerband"]
+  )
+  .cover-copy {
+  left: 220px !important;
+  top: 118px !important;
+  width: 560px !important;
+  height: 245px !important;
+  text-align: center !important;
+}
+.cover-canvas:is(
+    [data-composition="doubleframe"],
+    [data-composition="archframe"],
+    [data-composition="ovalframe"],
+    [data-composition="cornerframe"],
+    [data-composition="centerband"]
+  )
+  .cover-rule {
+  margin: 16px auto !important;
+}
+.cover-canvas:is(
+    [data-composition="doubleframe"],
+    [data-composition="archframe"],
+    [data-composition="ovalframe"],
+    [data-composition="cornerframe"],
+    [data-composition="centerband"]
+  )::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+  color: var(--accent);
+}
+.cover-canvas[data-composition="doubleframe"]::after {
+  inset: 90px 65px 49px;
+  border: 4px double var(--accent);
+  opacity: 0.65;
+}
+.cover-canvas[data-composition="archframe"]::after {
+  inset: 85px 150px 44px;
+  border: 1px solid var(--accent);
+  border-radius: 180px 180px 4px 4px;
+  opacity: 0.7;
+}
+.cover-canvas[data-composition="archframe"] .cover-copy {
+  top: 132px !important;
+  width: 520px !important;
+  left: 240px !important;
+  height: 218px !important;
+}
+.cover-canvas[data-composition="ovalframe"]::after {
+  inset: 85px 105px 40px;
+  border: 3px double var(--accent);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+.cover-canvas[data-composition="ovalframe"] .cover-copy {
+  top: 125px !important;
+  width: 490px !important;
+  left: 255px !important;
+  height: 220px !important;
+}
+.cover-canvas[data-composition="ovalframe"] .cover-eyebrow {
+  font-size: 8px !important;
+}
+.cover-canvas[data-composition="cornerframe"]::after {
+  inset: 105px 115px 60px;
+  background:
+    linear-gradient(currentColor, currentColor) left top/60px 2px,
+    linear-gradient(currentColor, currentColor) left top/2px 40px,
+    linear-gradient(currentColor, currentColor) right top/60px 2px,
+    linear-gradient(currentColor, currentColor) right top/2px 40px,
+    linear-gradient(currentColor, currentColor) left bottom/60px 2px,
+    linear-gradient(currentColor, currentColor) left bottom/2px 40px,
+    linear-gradient(currentColor, currentColor) right bottom/60px 2px,
+    linear-gradient(currentColor, currentColor) right bottom/2px 40px;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
+.cover-canvas[data-composition="centerband"]::after {
+  left: 0;
+  right: 0;
+  top: 115px;
+  height: 225px;
+  border-top: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
+  background: var(--paper);
+  opacity: 0.75;
+  z-index: 2;
+}
+.cover-canvas[data-composition="centerband"] .cover-copy {
+  top: 132px !important;
+  height: 196px !important;
+  width: 790px !important;
+  left: 105px !important;
+}
+.cover-canvas[data-composition="centertop"] {
+  --layout-art-x: -235px;
+  --layout-art-y: 120px;
+  --layout-art-scale: 0.68;
+}
+.cover-canvas[data-composition="centertop"] .cover-copy {
+  left: 120px !important;
+  top: 102px !important;
+  width: 760px !important;
+  height: 148px !important;
+  text-align: center !important;
+}
+.cover-canvas[data-composition="centertop"] .cover-title {
+  font-size: calc(var(--title-size) * 0.85) !important;
+}
+.cover-canvas[data-composition="centertop"] .cover-rule,
+.cover-canvas[data-composition="centertop"] .cover-author {
+  display: none !important;
+}
+.pattern-visibility {
+  font-size: 11px;
+  padding: 5px 9px;
+  color: #8bcab4;
+  background: #31544655;
+  border: 1px solid #6eae9b66;
+  border-radius: 5px;
+}
+.pattern-visibility[aria-pressed="false"] {
+  color: #adb4c3;
+  background: #ffffff08;
+  border-color: #ffffff26;
+}
