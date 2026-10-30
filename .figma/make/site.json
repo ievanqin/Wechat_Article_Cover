@@ -1,0 +1,10 @@
+{
+  "description": "Designs 2.35:1 WeChat article covers for book content, with a reusable 爱豆书单 brand mark to keep future covers visually consistent.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
