@@ -9,18 +9,26 @@ export function WeChatPreview({
   onChange: (patch: Partial<Design>) => void;
 }) {
   const [mode, setMode] = useState<"single" | "multi" | "square">("single");
-  const phoneRef=useRef<HTMLDivElement>(null);
-  const [previewWidth,setPreviewWidth]=useState(320);
-  useEffect(()=>{const node=phoneRef.current;if(!node)return;const ro=new ResizeObserver(()=>setPreviewWidth(node.clientWidth));ro.observe(node);return()=>ro.disconnect();},[]);
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const [previewWidth, setPreviewWidth] = useState(320);
+  useEffect(() => {
+    const node = phoneRef.current;
+    if (!node) return;
+    const ro = new ResizeObserver(() => setPreviewWidth(node.clientWidth));
+    ro.observe(node);
+    return () => ro.disconnect();
+  }, []);
   const title = d.articleTitle || d.title.replace(/\n/g, "");
   const cover = (
-    <div className="wechat-cover-scaled" style={{transform:`scale(${previewWidth/1000})`}}>
+    <div
+      className="wechat-cover-scaled"
+      style={{ transform: `scale(${previewWidth / 1000})` }}
+    >
       <CoverCanvas design={d} preview />
     </div>
   );
   return (
     <section className="wechat-preview">
-      <span className="overline">WECHAT PREVIEW</span>
       <h3>微信公众号预览</h3>
       <div className="wechat-modes" aria-label="微信预览方式">
         {(
@@ -56,7 +64,12 @@ export function WeChatPreview({
         </div>
         {mode === "single" ? (
           <div className="wechat-message">
-            <div className="wechat-hero" style={{width:previewWidth,height:previewWidth*.426}}>{cover}</div>
+            <div
+              className="wechat-hero"
+              style={{ width: previewWidth, height: previewWidth * 0.426 }}
+            >
+              {cover}
+            </div>
             <div className="wechat-single-caption">
               <b>{title}</b>
               <small>{d.subtitle}</small>
@@ -64,7 +77,10 @@ export function WeChatPreview({
           </div>
         ) : mode === "multi" ? (
           <div className="wechat-message">
-            <div className="wechat-hero" style={{width:previewWidth,height:previewWidth*.426}}>
+            <div
+              className="wechat-hero"
+              style={{ width: previewWidth, height: previewWidth * 0.426 }}
+            >
               {cover}
               <div className="wechat-title-overlay">
                 <b>{title}</b>

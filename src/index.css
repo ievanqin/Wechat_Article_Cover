@@ -3574,4 +3574,344 @@ body,
     height: 8px;
   }
 }
-.wechat-square .wechat-cover-scaled{transform:scale(.169)!important}
+.wechat-square .wechat-cover-scaled {
+  transform: scale(0.169) !important;
+}
+/* Compact inspector proportions without returning to tiny, ambiguous controls. */
+.app-header {
+  height: 82px;
+}
+.editor {
+  height: calc(100dvh - 82px);
+}
+.editor-heading {
+  padding: 19px 24px 17px;
+}
+.preview-area {
+  padding-top: 29px;
+}
+.preview-top {
+  margin-bottom: 25px;
+}
+.preview-top h2 {
+  font-size: 24px;
+  margin: 0;
+}
+.panel-heading {
+  margin-bottom: 23px;
+}
+.panel-heading h1 {
+  font-size: 22px;
+}
+.layer-panel {
+  padding: 16px;
+}
+.layer-panel h3 {
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+.layer-panel > header {
+  margin-bottom: 8px;
+}
+.layer-panel > header > button {
+  font-size: 10px;
+  padding: 5px 8px;
+}
+.current-theme {
+  padding: 6px 0 13px;
+  margin-bottom: 5px;
+}
+.current-theme strong {
+  font-size: 15px;
+  margin-top: 4px;
+}
+.current-theme > button,
+.layer-controls .current-theme > button {
+  font-size: 10px;
+  padding: 5px 7px;
+  bottom: 13px;
+}
+.layer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  margin: 7px 0;
+  border-radius: 6px;
+}
+.layer-info {
+  flex: 1;
+  min-width: 0;
+  gap: 6px;
+}
+.layer-name {
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.layer-state {
+  font-size: 9px;
+  padding: 2px 5px;
+}
+.layer-actions {
+  margin: 0;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.layer-row button,
+.layer-row select {
+  height: 28px;
+  font-size: 10px;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.layer-eye {
+  width: 29px;
+  min-width: 29px;
+}
+.layer-eye svg {
+  width: 16px;
+  height: 16px;
+}
+.layer-row select {
+  width: 62px;
+}
+.layer-row .layer-delete {
+  font-size: 17px;
+  padding: 2px 7px;
+  margin-left: 0;
+}
+.layer-section-title {
+  margin: 16px 0 8px;
+  font-size: 11px;
+}
+.layer-add {
+  font-size: 11px;
+  padding: 9px;
+  margin-top: 11px;
+}
+.layer-hint,
+.layer-empty {
+  font-size: 10px;
+  line-height: 1.7;
+}
+.native-layer-replace {
+  font-size: 10px;
+  padding: 8px;
+}
+.layer-transform {
+  padding: 10px;
+}
+.layer-transform label {
+  font-size: 11px;
+  margin: 11px 0;
+}
+.panel-scroll .layer-row {
+  display: block;
+  padding: 9px;
+}
+.panel-scroll .layer-actions {
+  margin: 8px 0 0 12px;
+}
+.panel-scroll .layer-row button {
+  font-size: 10px;
+  padding: 4px 6px;
+}
+.panel-scroll .layer-row select {
+  width: 63px;
+}
+.panel-scroll .layer-row .layer-delete {
+  font-size: 17px;
+}
+.below-canvas {
+  grid-template-columns: minmax(300px, 0.9fr) minmax(370px, 1.1fr);
+  gap: 24px;
+  margin-top: 28px;
+}
+.wechat-preview h3 {
+  font-size: 20px;
+  margin: 0 0 13px;
+}
+.wechat-modes {
+  margin-bottom: 12px;
+}
+.wechat-title-input {
+  margin-bottom: 13px;
+}
+.theme-search {
+  display: flex;
+  align-items: center;
+  border: 1px solid #40516b;
+  border-radius: 6px;
+  background: #19283b;
+  margin-bottom: 12px;
+}
+.theme-search input {
+  width: 100%;
+  padding: 10px 11px;
+  background: transparent;
+  border: 0;
+  color: #e0e9f6;
+  font-size: 11px;
+  min-width: 0;
+}
+.theme-search button {
+  border: 0;
+  background: none;
+  color: #adbdce;
+  font-size: 18px;
+  margin-right: 8px;
+}
+.theme-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 11px;
+}
+.theme-category-grid button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #34465f;
+  background: #1b2a3e;
+  color: #aebed1;
+  border-radius: 5px;
+  padding: 8px 9px;
+  font-size: 11px;
+}
+.theme-category-grid button[aria-pressed="true"] {
+  border-color: #c0a56c;
+  background: #3a3c3d;
+  color: #ecd6a7;
+}
+.theme-category-grid small {
+  font-size: 9px;
+  opacity: 0.65;
+}
+.theme-result-note {
+  font-size: 10px;
+  color: #8499b1;
+  margin: 0 0 16px;
+}
+.catalog-select,
+.asset-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #adbed2;
+  margin: 12px 0 18px;
+}
+.catalog-select select,
+.asset-filter select {
+  max-width: 215px;
+  flex: 1;
+  background: #1b2d43;
+  color: #d5dfed;
+  border: 1px solid #425673;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 11px;
+}
+.family-grid p {
+  min-height: 26px;
+  font-size: 9px;
+}
+.texture-waterlight,
+.texture-oceanblue,
+.texture-crystalwater,
+.texture-ceramicwave {
+  --texture-x: 75%;
+  --texture-y: 70%;
+  --texture-ring: 30px;
+  --texture-cell: 45px;
+  --texture-step: 6px;
+  --texture-dot: 18px;
+}
+.texture-inkwash,
+.texture-mistland,
+.texture-reflection,
+.texture-snowpeak {
+  --texture-x: 85%;
+  --texture-y: 20%;
+  --texture-ring: 60px;
+  --texture-cell: 90px;
+  --texture-step: 3px;
+  --texture-dot: 26px;
+}
+.family-inkwash .cover-title,
+.family-mistland .cover-title {
+  font-family: var(--serif);
+  letter-spacing: 5px;
+}
+.family-inkwash .cover-decoration > span:first-child,
+.family-reflection .cover-decoration > span:first-child {
+  opacity: 0.12;
+}
+.family-snowpeak .cover-decoration > span:first-child,
+.family-libraryhall .cover-decoration > span:first-child {
+  border-radius: 0;
+}
+.family-libraryhall .cover-title,
+.family-bookarchitecture .cover-title {
+  font-family: var(--serif);
+  font-weight: 600;
+}
+.family-ringplanet .cover-title,
+.family-deepspace .cover-title,
+.family-cosmicportal .cover-title {
+  font-family: "PingFang SC", sans-serif;
+  font-weight: 700;
+}
+@media (max-width: 1320px) {
+  .below-canvas {
+    grid-template-columns: 1fr;
+  }
+  .layer-panel {
+    max-width: 100%;
+  }
+}
+@media (max-width: 760px) {
+  .app-header {
+    height: 76px;
+  }
+  .editor {
+    top: 76px;
+    height: calc(100dvh - 76px);
+  }
+  .preview-area {
+    padding-top: 25px;
+  }
+  .preview-top h2 {
+    font-size: 21px;
+  }
+  .layer-panel {
+    padding: 14px;
+  }
+  .layer-row {
+    display: block;
+    padding: 10px;
+  }
+  .layer-actions {
+    margin: 9px 0 0 12px;
+  }
+  .layer-name {
+    font-size: 12px;
+  }
+  .layer-row button,
+  .layer-row select {
+    height: 30px;
+    font-size: 11px;
+  }
+  .layer-panel h3 {
+    font-size: 18px;
+  }
+  .theme-category-grid button {
+    padding: 9px;
+  }
+}

@@ -1,4 +1,5 @@
-import {SculptureArt} from "./SculptureArt";
+import { LandscapeArt } from "./LandscapeArt";
+import { SculptureArt } from "./SculptureArt";
 import { ClassicMotif } from "./ClassicScene";
 import { INITIAL } from "./catalog";
 import { RichScene } from "./RichScene";
@@ -159,7 +160,14 @@ export function MotifArt({
       </svg>
     );
   }
-  if(id.startsWith('sculpt:'))return <SculptureArt kind={id.slice(7)} accent={color} thumbnail={thumbnail}/>;
+  if (id.startsWith("sculpt:"))
+    return (
+      <SculptureArt kind={id.slice(7)} accent={color} thumbnail={thumbnail} />
+    );
+  if (id.startsWith("landscape:"))
+    return (
+      <LandscapeArt kind={id.slice(10)} accent={color} thumbnail={thumbnail} />
+    );
   const path = {
     center: centerPaths,
     side: sidePaths,

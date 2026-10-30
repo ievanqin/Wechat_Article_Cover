@@ -58,7 +58,120 @@ export function SculptureArt({
         transform={thumbnail ? undefined : "translate(635 65)"}
         filter={paint("shadow")}
       >
-        {kind === "chrome-orbit" ? (
+        {kind === "glass-sphere" ? (
+          <g>
+            <circle
+              cx="170"
+              cy="150"
+              r="111"
+              fill={paint("glass")}
+              stroke="#bce3f5"
+              strokeWidth="2"
+            />
+            <ellipse
+              cx="145"
+              cy="111"
+              rx="60"
+              ry="36"
+              fill="#f1faff"
+              opacity=".24"
+              transform="rotate(-34 145 111)"
+            />
+            <path
+              d="M89 172Q160 235 258 152 M76 141Q170 74 269 131"
+              fill="none"
+              stroke={accent}
+              strokeWidth="3"
+              opacity=".6"
+            />
+            <ellipse
+              cx="170"
+              cy="272"
+              rx="104"
+              ry="12"
+              fill="#071a29"
+              opacity=".18"
+            />
+          </g>
+        ) : kind === "levitating-pages" ? (
+          <g>
+            {Array.from({ length: 7 }, (_, i) => (
+              <path
+                key={i}
+                d={`M${52 + i * 3} ${30 + i * 28}Q164 ${1 + i * 30} ${284 - i * 3} ${42 + i * 27}L${279 - i * 3} ${78 + i * 26}Q168 ${34 + i * 29} ${49 + i * 3} ${66 + i * 28}Z`}
+                fill={i % 2 ? "#f5e4cd" : paint("clay")}
+                stroke="#c7b49a"
+              />
+            ))}
+            <path
+              d="M101 263Q172 247 253 270"
+              stroke={accent}
+              fill="none"
+              opacity=".5"
+            />
+          </g>
+        ) : kind === "stone-rings" ? (
+          <g>
+            {[0, 1, 2, 3].map((i) => (
+              <g key={i} transform={`translate(0 ${i * 35})`}>
+                <ellipse
+                  cx="170"
+                  cy="81"
+                  rx={111 - i * 13}
+                  ry="46"
+                  fill="none"
+                  stroke={paint("clay")}
+                  strokeWidth="22"
+                />
+                <ellipse
+                  cx="170"
+                  cy="76"
+                  rx={111 - i * 13}
+                  ry="46"
+                  fill="none"
+                  stroke="#eddfc9"
+                  strokeWidth="2"
+                  opacity=".7"
+                />
+              </g>
+            ))}
+          </g>
+        ) : kind === "faceted-planet" ? (
+          <g>
+            <path
+              d="M170 22L253 48L296 125L275 219L185 278L91 253L40 168L68 73Z"
+              fill={paint("chrome")}
+            />
+            {[
+              "M170 22L160 119L68 73Z",
+              "M170 22L253 48L160 119Z",
+              "M253 48L296 125L160 119Z",
+              "M296 125L275 219L189 189L160 119Z",
+              "M275 219L185 278L189 189Z",
+              "M185 278L91 253L189 189Z",
+              "M91 253L40 168L160 119L189 189Z",
+            ].map((d, i) => (
+              <path
+                key={d}
+                d={d}
+                fill={i % 2 ? accent : "#e4effb"}
+                opacity={0.15 + i * 0.055}
+                stroke="#d9e7f5"
+                strokeWidth=".6"
+              />
+            ))}
+            <ellipse
+              cx="170"
+              cy="153"
+              rx="161"
+              ry="43"
+              fill="none"
+              stroke={accent}
+              strokeWidth="4"
+              transform="rotate(-20 170 153)"
+            />
+          </g>
+        ) : kind === "chrome-orbit" ? (
           <g transform="rotate(-24 170 150)">
             <ellipse
               cx="170"

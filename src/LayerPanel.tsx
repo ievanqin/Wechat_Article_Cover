@@ -86,7 +86,6 @@ export function LayerPanel({
   return (
     <div className="layer-controls">
       <div className="current-theme">
-        <small>CURRENT DESIGN</small>
         <strong>{FAMILIES.find((f) => f.id === d.family)?.name}</strong>
         <button
           aria-label={

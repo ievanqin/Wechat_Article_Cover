@@ -1,3 +1,4 @@
+import { LandscapeArt } from "./LandscapeArt";
 import { SculptureArt } from "./SculptureArt";
 import { useId } from "react";
 import type { Family } from "./catalog";
@@ -34,6 +35,30 @@ export function RichScene({
   const uid = useId().replace(/:/g, "");
   const id = (s: string) => `${uid}-${s}`;
   const fill = (s: string) => `url(#${id(s)})`;
+  const landscape: Record<string, string> = {
+    waterlight: "ripple-plane",
+    bookarchitecture: "fold-book",
+    libraryhall: "library-vault",
+    oceanblue: "ocean-swell",
+    mistland: "mist-mountains",
+    inkwash: "ink-peaks",
+    reflection: "lake-mirror",
+    snowpeak: "snow-massif",
+    deepspace: "star-nebula",
+    ringplanet: "orbital-world",
+    crystalwater: "crystal-rings",
+    papercanyon: "page-canyon",
+    ceramicwave: "ceramic-surf",
+    cosmicportal: "cosmic-gateway",
+  };
+  if (landscape[originalFamily])
+    return (
+      <LandscapeArt
+        kind={landscape[originalFamily]}
+        accent={accent}
+        thumbnail={thumbnail}
+      />
+    );
   const sculpture: Record<string, string> = {
     chromesculpt: "chrome-orbit",
     clayrelief: "clay-disc",

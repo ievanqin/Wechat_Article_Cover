@@ -1,3 +1,4 @@
+import { THEME_GROUPS } from "./catalog";
 import { WeChatPreview } from "./WeChatPreview";
 import { LayerPanel } from "./LayerPanel";
 import { classicLayerIds } from "./catalog";
@@ -192,9 +193,10 @@ function App() {
   const [familyFilter, setFamilyFilter] = useState<Family | "all">("all");
   const [category, setCategory] =
     useState<(typeof categories)[number]["id"]>("center");
-  const [themeFilter, setThemeFilter] = useState<
-    "all" | "classic" | "category" | "modern"
-  >("all");
+  const [themeFilter, setThemeFilter] =
+    useState<(typeof THEME_GROUPS)[number]["id"]>("featured");
+  const [themeSearch, setThemeSearch] = useState("");
+  const [assetGroup, setAssetGroup] = useState("all");
   const [showLayers, setShowLayers] = useState(true);
   const [query, setQuery] = useState("");
   const [hasOverflow, setHasOverflow] = useState(false);
@@ -343,9 +345,31 @@ function App() {
       exporting.current = false;
     }
   }
+  const matchesAsset = (m: (typeof MOTIFS)[number]) =>
+    assetGroup === "all" ||
+    (assetGroup === "3d"
+      ? m.id.startsWith("sculpt:") ||
+        [
+          "crystalwater",
+          "papercanyon",
+          "ceramicwave",
+          "bookarchitecture",
+        ].includes(m.family)
+      : assetGroup === "water"
+        ? /水|海|浪|湖|涟漪|倒影/.test(m.name)
+        : assetGroup === "landscape"
+          ? /山|墨|松|雪|岚|竹/.test(m.name)
+          : assetGroup === "books"
+            ? /书|图书馆|藏书|纸页/.test(m.name)
+            : assetGroup === "space"
+              ? /星|宇宙|太空|深空|际|飞碟|轨道/.test(m.name)
+              : assetGroup === "classic"
+                ? m.id.startsWith("original:")
+                : m.id.startsWith("emoji:"));
   const shownMotifs = MOTIFS.filter(
     (m) =>
       m.category === category &&
+      matchesAsset(m) &&
       (!query ||
         `${m.name} ${m.tag || ""} ${FAMILIES.find((f) => f.id === m.family)?.name}`.includes(
           query,
@@ -437,7 +461,6 @@ function App() {
         <aside className={`editor ${mobilePanel ? "mobile-visible" : ""}`}>
           <div className="editor-heading">
             <span>创作工作台</span>
-            <span className="edition">YOUR LITTLE STUDIO</span>
           </div>
           <nav className="editor-tabs" aria-label="编辑步骤">
             {TABS.map((t) => (
@@ -453,9 +476,6 @@ function App() {
           </nav>
           <div className="panel-scroll">
             <div className="panel-heading">
-              <span className="overline">
-                0{TABS.findIndex((t) => t.id === tab) + 1} / MAKE IT YOURS
-              </span>
               <h1>{TABS.find((t) => t.id === tab)?.hint}</h1>
               <p>
                 {tab === "copy"
@@ -568,23 +588,23 @@ function App() {
             )}
             {tab === "layout" && (
               <>
-                <div className="filter-row">
-                  <button
-                    aria-pressed={familyFilter === "all"}
-                    onClick={() => setFamilyFilter("all")}
+                <label className="catalog-select">
+                  构图风格
+                  <select
+                    aria-label="构图风格"
+                    value={familyFilter}
+                    onChange={(e) =>
+                      setFamilyFilter(e.target.value as Family | "all")
+                    }
                   >
-                    全部 {LAYOUTS.length}
-                  </button>
-                  {FAMILIES.map((f) => (
-                    <button
-                      key={f.id}
-                      aria-pressed={familyFilter === f.id}
-                      onClick={() => setFamilyFilter(f.id)}
-                    >
-                      {f.name}
-                    </button>
-                  ))}
-                </div>
+                    <option value="all">全部构图 · {LAYOUTS.length}</option>
+                    {FAMILIES.map((f) => (
+                      <option key={f.id} value={f.id}>
+                        {f.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <div className="layout-grid">
                   {LAYOUTS.filter(
                     (l) => familyFilter === "all" || l.family === familyFilter,
@@ -624,33 +644,54 @@ function App() {
                 <div className="section-label">
                   整套风格<span>组合构图、色彩与意象</span>
                 </div>
-                <div className="filter-row theme-filter">
-                  {(
-                    [
-                      ["all", "全部风格"],
-                      ["classic", "原版经典"],
-                      ["category", "图书分类"],
-                      ["modern", "现代风格"],
-                    ] as const
-                  ).map(([id, name]) => (
+                <label className="theme-search">
+                  <input
+                    aria-label="搜索主题"
+                    placeholder="搜索水纹、图书馆、雪山、3D…"
+                    value={themeSearch}
+                    onChange={(e) => setThemeSearch(e.target.value)}
+                  />
+                  {themeSearch && (
                     <button
-                      key={id}
-                      aria-pressed={themeFilter === id}
-                      onClick={() => setThemeFilter(id)}
+                      aria-label="清空主题搜索"
+                      onClick={() => setThemeSearch("")}
                     >
-                      {name}
+                      ×
+                    </button>
+                  )}
+                </label>
+                <div className="theme-category-grid" aria-label="主题分类">
+                  {THEME_GROUPS.map((g) => (
+                    <button
+                      key={g.id}
+                      aria-pressed={themeFilter === g.id}
+                      onClick={() => setThemeFilter(g.id)}
+                    >
+                      {g.name}
+                      <small>{g.families.length}</small>
                     </button>
                   ))}
                 </div>
+                <p className="theme-result-note">
+                  {themeSearch
+                    ? "全库搜索结果"
+                    : "按分类浏览；默认展示精选组合"}
+                </p>
                 <div className="family-grid">
-                  {FAMILIES.filter(
-                    (f, i) =>
-                      themeFilter === "all" ||
-                      (themeFilter === "classic"
-                        ? f.id === "classic"
-                        : themeFilter === "modern"
-                          ? i < 6
-                          : i > 6),
+                  {FAMILIES.filter((f) =>
+                    themeSearch.trim()
+                      ? `${f.name} ${f.en} ${f.desc} ${THEME_GROUPS.filter(
+                          (g) =>
+                            (g.families as readonly string[]).includes(f.id),
+                        )
+                          .map((g) => g.name)
+                          .join(" ")}`
+                          .toLowerCase()
+                          .includes(themeSearch.trim().toLowerCase())
+                      : (
+                          THEME_GROUPS.find((g) => g.id === themeFilter)
+                            ?.families as readonly string[]
+                        )?.includes(f.id),
                   ).map((f) => (
                     <button
                       key={f.id}
@@ -810,23 +851,23 @@ function App() {
                 <div className="section-label">
                   背景肌理<span>{BACKGROUNDS.length} 种 · 全部本地绘制</span>
                 </div>
-                <div className="filter-row">
-                  <button
-                    aria-pressed={familyFilter === "all"}
-                    onClick={() => setFamilyFilter("all")}
+                <label className="catalog-select">
+                  背景风格
+                  <select
+                    aria-label="背景风格"
+                    value={familyFilter}
+                    onChange={(e) =>
+                      setFamilyFilter(e.target.value as Family | "all")
+                    }
                   >
-                    全部
-                  </button>
-                  {FAMILIES.map((f) => (
-                    <button
-                      key={f.id}
-                      aria-pressed={familyFilter === f.id}
-                      onClick={() => setFamilyFilter(f.id)}
-                    >
-                      {f.name}
-                    </button>
-                  ))}
-                </div>
+                    <option value="all">全部背景</option>
+                    {FAMILIES.map((f) => (
+                      <option key={f.id} value={f.id}>
+                        {f.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <div className="background-grid">
                   {BACKGROUNDS.filter(
                     (b) => familyFilter === "all" || b.family === familyFilter,
@@ -872,6 +913,26 @@ function App() {
                     </button>
                   )}
                 </label>
+                <label className="asset-filter">
+                  素材类别
+                  <select
+                    aria-label="素材类别"
+                    value={assetGroup}
+                    onChange={(e) => {
+                      setAssetGroup(e.target.value);
+                      setCategory("center");
+                    }}
+                  >
+                    <option value="all">全部素材</option>
+                    <option value="3d">3D 与立体材质</option>
+                    <option value="water">水纹与海洋</option>
+                    <option value="landscape">山水、水墨与雪山</option>
+                    <option value="books">图书与图书馆</option>
+                    <option value="space">科幻与太空</option>
+                    <option value="classic">原版经典</option>
+                    <option value="emoji">Emoji</option>
+                  </select>
+                </label>
                 <div className="category-tabs">
                   {categories.map((c) => (
                     <button
@@ -881,7 +942,11 @@ function App() {
                     >
                       {c.name}
                       <small>
-                        {MOTIFS.filter((m) => m.category === c.id).length}
+                        {
+                          MOTIFS.filter(
+                            (m) => m.category === c.id && matchesAsset(m),
+                          ).length
+                        }
                       </small>
                     </button>
                   ))}
@@ -969,7 +1034,6 @@ function App() {
         <main className="preview-area">
           <div className="preview-top">
             <div>
-              <span className="overline">THE CANVAS</span>
               <h2>
                 让灵感，慢慢成形<span>实时预览</span>
               </h2>
