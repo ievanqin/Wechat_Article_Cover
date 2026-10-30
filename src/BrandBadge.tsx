@@ -8,7 +8,13 @@ export type BrandTheme =
   | "cyber-neon"
   | "platinum"
   | "sunset"
-  | "sticker";
+  | "sticker"
+  | "chrome-cut"
+  | "orbital-mark"
+  | "editorial-block"
+  | "holo-ticket"
+  | "soft-capsule"
+  | "monogram";
 export function AidouBrandBadge({
   position,
   theme,
@@ -85,6 +91,42 @@ export function AidouBrandBadge({
       title: "brand-title-sunset",
       sub: "brand-sub-sunset",
     },
+    "chrome-cut": {
+      wrapper: "brand-new brand-chrome-cut",
+      iconBg: "brand-new-icon",
+      title: "brand-new-title",
+      sub: "brand-new-sub",
+    },
+    "orbital-mark": {
+      wrapper: "brand-new brand-orbital-mark",
+      iconBg: "brand-new-icon",
+      title: "brand-new-title",
+      sub: "brand-new-sub",
+    },
+    "editorial-block": {
+      wrapper: "brand-new brand-editorial-block",
+      iconBg: "brand-new-icon",
+      title: "brand-new-title",
+      sub: "brand-new-sub",
+    },
+    "holo-ticket": {
+      wrapper: "brand-new brand-holo-ticket",
+      iconBg: "brand-new-icon",
+      title: "brand-new-title",
+      sub: "brand-new-sub",
+    },
+    "soft-capsule": {
+      wrapper: "brand-new brand-soft-capsule",
+      iconBg: "brand-new-icon",
+      title: "brand-new-title",
+      sub: "brand-new-sub",
+    },
+    monogram: {
+      wrapper: "brand-new brand-monogram",
+      iconBg: "brand-new-icon",
+      title: "brand-new-title",
+      sub: "brand-new-sub",
+    },
     sticker: {
       wrapper: "brand-extra brand-sticker",
       iconBg: "brand-icon-sticker",
@@ -111,16 +153,35 @@ export function AidouBrandBadge({
           stroke="currentColor"
           strokeWidth="2"
         >
-          <path
-            d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a2.5 2.5 0 0 1 0-5H20"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M12 6.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1L12 6.5z"
-            fill="currentColor"
-            stroke="none"
-          />
+          {theme === "orbital-mark" ? (
+            <>
+              <ellipse
+                cx="12"
+                cy="12"
+                rx="11"
+                ry="4"
+                transform="rotate(-30 12 12)"
+              />
+              <path d="M7 5L12 8L17 5V18L12 21L7 18Z" />
+            </>
+          ) : theme === "monogram" ? (
+            <path d="M3 5L12 9L21 5V18L12 22L3 18ZM12 9V22M3 5V2L12 6L21 2V5" />
+          ) : theme === "editorial-block" ? (
+            <path d="M4 3H10V21H4ZM14 3H20V21H14Z" />
+          ) : (
+            <>
+              <path
+                d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a2.5 2.5 0 0 1 0-5H20"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 6.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1L12 6.5z"
+                fill="currentColor"
+                stroke="none"
+              />
+            </>
+          )}
         </svg>
       </div>
 

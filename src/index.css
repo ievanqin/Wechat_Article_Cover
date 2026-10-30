@@ -3915,3 +3915,303 @@ body,
     padding: 9px;
   }
 }
+
+/* Expressive type pairs: local fonts retain sharpness in downloaded covers. */
+.font-display {
+  font-family: "Arial Black", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 900;
+}
+.font-rounded {
+  font-family: "Yuanti SC", "HanziPen SC", "YouYuan", "PingFang SC", sans-serif;
+  font-weight: 600;
+}
+.font-kai {
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", serif;
+}
+.font-mono {
+  font-family: "SFMono-Regular", "Menlo", "Noto Sans Mono CJK SC", monospace;
+}
+.font-elegant {
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+  font-weight: 300;
+}
+.font-condensed {
+  font-family: "Impact", "Arial Narrow", "PingFang SC", sans-serif;
+  font-weight: 800;
+}
+.font-display .cover-title {
+  font-weight: 900;
+  line-height: 1.08;
+}
+.font-rounded .cover-title {
+  font-weight: 600;
+}
+.font-kai .cover-title {
+  font-weight: 500;
+}
+.font-mono .cover-title {
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.font-elegant .cover-title {
+  font-weight: 300;
+  line-height: 1.4;
+}
+.font-condensed .cover-title {
+  transform: scaleX(0.78);
+  transform-origin: left;
+  width: 125%;
+  line-height: 1.05;
+}
+.font-set-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+.font-set-grid button {
+  text-align: left;
+  border: 1px solid #ffffff18;
+  background: #ffffff04;
+  border-radius: 9px;
+  padding: 9px 11px;
+  color: #ccd2df;
+}
+.font-set-grid button[aria-pressed="true"] {
+  border-color: #c4b18a;
+  background: #c4b18a18;
+  color: #f4e5c6;
+}
+.font-set-grid strong {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: #a7adbc;
+}
+.font-demo {
+  display: block;
+  font-size: 19px;
+  margin-top: 6px;
+}
+
+/* Six compositions with deliberate contrast between the type field and the object. */
+.cover-canvas:has(.virtual-scene) .cover-decoration {
+  display: none;
+}
+.cover-canvas:has(.virtual-scene) .cover-copy {
+  left: 55px;
+  top: 115px;
+  width: 420px;
+  height: 240px;
+  text-align: left;
+}
+.cover-canvas:has(.virtual-scene) .cover-title {
+  font-size: var(--title-size);
+}
+.cover-canvas:has(.virtual-scene) .cover-subtitle {
+  font-size: 13px;
+  max-width: 340px;
+}
+.cover-canvas:has(.virtual-scene) .cover-eyebrow {
+  margin-bottom: 14px;
+}
+.cover-canvas:has(.virtual-scene) .cover-rule {
+  margin: 14px 0;
+}
+.cover-canvas:has(.virtual-scene) .cover-author {
+  font-size: 10px;
+  margin-top: 15px;
+}
+.cover-canvas:has(.virtual-scene).composition-1 .virtual-scene {
+  transform: translate(-40px, 25px) rotate(-14deg) scale(1.15);
+}
+.cover-canvas:has(.virtual-scene).composition-1 .cover-copy {
+  transform: rotate(-6deg);
+  left: 65px;
+  top: 120px;
+  width: 440px;
+}
+.cover-canvas:has(.virtual-scene).composition-1 .cover-title {
+  text-shadow: 4px 5px 0 color-mix(in srgb, var(--accent), transparent 65%);
+}
+.cover-canvas:has(.virtual-scene).composition-2 .virtual-scene {
+  opacity: 1;
+  transform: translate(-60px, 50px) scale(1.05);
+}
+.cover-canvas:has(.virtual-scene).composition-2 .cover-copy {
+  top: 95px;
+  left: 50px;
+  width: 510px;
+  height: 260px;
+}
+.cover-canvas:has(.virtual-scene).composition-2 .cover-title {
+  font-size: calc(var(--title-size) * 1.2);
+  line-height: 1.05;
+}
+.cover-canvas:has(.virtual-scene).composition-3 .cover-copy {
+  writing-mode: vertical-rl;
+  top: 105px;
+  left: 55px;
+  width: 350px;
+  height: 265px;
+}
+.cover-canvas:has(.virtual-scene).composition-3 .cover-eyebrow {
+  display: none;
+}
+.cover-canvas:has(.virtual-scene).composition-3 .cover-rule {
+  width: 1px;
+  height: 130px;
+  margin: 0 20px;
+}
+.cover-canvas:has(.virtual-scene).composition-3 .cover-subtitle {
+  font-size: 12px;
+  max-width: 70px;
+  margin: 0 20px;
+}
+.cover-canvas:has(.virtual-scene).composition-3 .cover-author {
+  margin: 0 10px;
+}
+.cover-canvas:has(.virtual-scene).composition-4 .virtual-scene {
+  transform: translate(-430px, 0);
+}
+.cover-canvas:has(.virtual-scene).composition-4 .cover-copy {
+  left: 550px;
+  top: 110px;
+  width: 390px;
+  height: 260px;
+}
+.cover-canvas:has(.virtual-scene).composition-5 .virtual-scene {
+  transform: translate(-190px, -90px) scale(1.2);
+  opacity: 0.85;
+}
+.cover-canvas:has(.virtual-scene).composition-5 .cover-copy {
+  left: 55px;
+  top: 225px;
+  width: 880px;
+  height: 155px;
+}
+.cover-canvas:has(.virtual-scene).composition-5 .cover-title {
+  font-size: calc(var(--title-size) * 0.9);
+  max-width: 100%;
+}
+.cover-canvas:has(.virtual-scene).composition-5 .cover-eyebrow,
+.cover-canvas:has(.virtual-scene).composition-5 .cover-rule,
+.cover-canvas:has(.virtual-scene).composition-5 .cover-author {
+  display: none;
+}
+.cover-canvas:has(.virtual-scene).composition-5 .cover-copy {
+  filter: drop-shadow(0 2px 8px var(--paper));
+}
+
+.brand-new {
+  border: 1px solid #ffffff60;
+  box-shadow: 0 7px 17px #0005;
+}
+.brand-new-icon {
+  color: inherit;
+  background: #ffffff20;
+}
+.brand-new-title {
+  color: inherit;
+}
+.brand-new-sub {
+  color: inherit;
+  opacity: 0.7;
+}
+.brand-chrome-cut {
+  border-radius: 6px !important;
+  background: linear-gradient(
+    120deg,
+    #f4f7fa,
+    #8894a7 35%,
+    #fff 49%,
+    #aeb7c4 68%,
+    #e4eaf5
+  );
+  color: #1c2537;
+  transform: skewX(-7deg);
+  border-color: #ecf5ff;
+}
+.brand-orbital-mark {
+  color: #b6ffef;
+  background: #071d2e;
+  border-color: #88e8d8;
+  box-shadow: 0 0 18px #72e8d82a;
+}
+.brand-orbital-mark .brand-new-icon {
+  background: transparent;
+}
+.brand-editorial-block {
+  border-radius: 0 !important;
+  background: #deff39;
+  color: #171c24;
+  border: 0;
+  border-left: 7px solid #171c24;
+}
+.brand-editorial-block .brand-new-title {
+  font-family: "PingFang SC", sans-serif;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+.brand-holo-ticket {
+  border-radius: 4px !important;
+  background: linear-gradient(110deg, #d6f8ef, #c9c0f7, #f6d0ed, #e5f7b9);
+  color: #35304c;
+  border: 1px dashed #66568f;
+}
+.brand-soft-capsule {
+  background: linear-gradient(#ffe6f1, #e7a5d3);
+  color: #633957;
+  border: 2px solid #fff8;
+  box-shadow:
+    inset 0 3px 7px #fff9,
+    0 5px 0 #914c87,
+    0 10px 17px #0003;
+}
+.brand-monogram {
+  border-radius: 9px !important;
+  background: #f4ede0;
+  color: #3f493e;
+  border: 1px solid #939a81;
+}
+.brand-monogram .brand-new-icon {
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+.font-display {
+  --user-face: "Arial Black", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.font-rounded {
+  --user-face: "Yuanti SC", "YouYuan", "PingFang SC", sans-serif;
+}
+.font-kai {
+  --user-face: "Kaiti SC", "STKaiti", "KaiTi", serif;
+}
+.font-mono {
+  --user-face: "SFMono-Regular", "Menlo", monospace;
+}
+.font-elegant {
+  --user-face: "Songti SC", "STSong", "SimSun", serif;
+}
+.font-condensed {
+  --user-face: "Impact", "Arial Narrow", "PingFang SC", sans-serif;
+}
+.cover-canvas:is(
+    .font-display,
+    .font-rounded,
+    .font-kai,
+    .font-mono,
+    .font-elegant,
+    .font-condensed
+  )
+  .classic-canvas-scene
+  .font-serif-sc {
+  font-family: var(--user-face);
+}
+.font-demo.font-serif {
+  font-family: "Songti SC", serif;
+}
+.font-demo.font-sans {
+  font-family: "PingFang SC", sans-serif;
+}
+.cover-canvas:has(.virtual-scene) .cover-title {text-wrap:balance;}
+.cover-canvas:has(.virtual-scene).composition-3 .cover-author {display:none;}

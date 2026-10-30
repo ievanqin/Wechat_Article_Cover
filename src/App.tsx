@@ -1,11 +1,10 @@
-import { THEME_GROUPS } from "./catalog";
+import { FONT_SETS, THEME_GROUPS } from "./catalog";
 import { WeChatPreview } from "./WeChatPreview";
 import { LayerPanel } from "./LayerPanel";
 import { classicLayerIds } from "./catalog";
 import { CLASSIC_BOOKS } from "./ClassicScene";
 import { AidouBrandBadge } from "./BrandBadge";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { domToPng } from "modern-screenshot";
 import {
   BACKGROUNDS,
   FAMILIES,
@@ -62,7 +61,7 @@ function readDraft(): Design {
         d[key] = Math.max(min, Math.min(max, v[key]));
     for (const key of ["showBrand", "showGuides"] as const)
       if (typeof v[key] === "boolean") d[key] = v[key];
-    if (v.font === "serif" || v.font === "sans") d.font = v.font;
+    if (FONT_SETS.some((f) => f.id === v.font)) d.font = v.font;
     if (["top-left", "top-right", "bottom-left"].includes(v.brandPosition))
       d.brandPosition = v.brandPosition;
     if (
@@ -76,6 +75,12 @@ function readDraft(): Design {
         "platinum",
         "sunset",
         "sticker",
+        "chrome-cut",
+        "orbital-mark",
+        "editorial-block",
+        "holo-ticket",
+        "soft-capsule",
+        "monogram",
       ].includes(v.brandTheme)
     )
       d.brandTheme = v.brandTheme;
@@ -321,6 +326,7 @@ function App() {
     setBusy(true);
     setMessage("");
     try {
+      const { domToPng } = await import("modern-screenshot");
       await document.fonts.ready;
       const url = await domToPng(canvasRef.current, {
         width: 1000,
@@ -348,7 +354,8 @@ function App() {
   const matchesAsset = (m: (typeof MOTIFS)[number]) =>
     assetGroup === "all" ||
     (assetGroup === "3d"
-      ? m.id.startsWith("sculpt:") ||
+      ? m.id.startsWith("virtual:") ||
+        m.id.startsWith("sculpt:") ||
         [
           "crystalwater",
           "papercanyon",
@@ -503,19 +510,19 @@ function App() {
                 {field("author", "作者 / 底部署名")}
                 {field("footerText", "右下角角标（留空可隐藏）")}
                 <div className="section-label">字体与节奏</div>
-                <div className="segmented">
-                  <button
-                    aria-pressed={d.font === "serif"}
-                    onClick={() => update({ font: "serif" })}
-                  >
-                    宋体 · 书卷感
-                  </button>
-                  <button
-                    aria-pressed={d.font === "sans"}
-                    onClick={() => update({ font: "sans" })}
-                  >
-                    黑体 · 现代感
-                  </button>
+                <div className="font-set-grid">
+                  {FONT_SETS.map((f) => (
+                    <button
+                      key={f.id}
+                      aria-pressed={d.font === f.id}
+                      onClick={() => update({ font: f.id })}
+                    >
+                      <strong>{f.name}</strong>
+                      <span className={`font-demo font-${f.id}`}>
+                        {f.sample}
+                      </span>
+                    </button>
+                  ))}
                 </div>
                 {range("titleSize", "标题字号", 32, 96, "px")}
                 {d.family === "classic" &&
@@ -567,6 +574,12 @@ function App() {
                           ["platinum", "铂金银白"],
                           ["sunset", "落日琉光"],
                           ["sticker", "紫糖贴纸"],
+                          ["chrome-cut", "铬金切片"],
+                          ["orbital-mark", "轨道书星"],
+                          ["editorial-block", "先锋字标"],
+                          ["holo-ticket", "全息票签"],
+                          ["soft-capsule", "软胶胶囊"],
+                          ["monogram", "几何书章"],
                         ] as const
                       ).map(([id, name]) => (
                         <button

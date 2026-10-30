@@ -1,3 +1,5 @@
+import { VirtualArt } from "./VirtualArt";
+import { EXPERIMENTAL_ART } from "./catalog";
 import { LandscapeArt } from "./LandscapeArt";
 import { SculptureArt } from "./SculptureArt";
 import { useId } from "react";
@@ -18,6 +20,7 @@ export function RichScene({
   thumbnail?: boolean;
 }) {
   const originalFamily = family;
+  const virtualKind = EXPERIMENTAL_ART[family as keyof typeof EXPERIMENTAL_ART];
   const emojiSet: Record<string, string[]> = {
     emojicosmos: ["🪐", "🚀", "🛸", "✨"],
     emojiai: ["🤖", "🧠", "💡", "✨"],
@@ -51,6 +54,10 @@ export function RichScene({
     ceramicwave: "ceramic-surf",
     cosmicportal: "cosmic-gateway",
   };
+  if (virtualKind)
+    return (
+      <VirtualArt kind={virtualKind} accent={accent} thumbnail={thumbnail} />
+    );
   if (landscape[originalFamily])
     return (
       <LandscapeArt
