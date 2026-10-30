@@ -1,3 +1,6 @@
+import { WeChatPreview } from "./WeChatPreview";
+import { LayerPanel } from "./LayerPanel";
+import { classicLayerIds } from "./catalog";
 import { CLASSIC_BOOKS } from "./ClassicScene";
 import { AidouBrandBadge } from "./BrandBadge";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -31,6 +34,8 @@ function readDraft(): Design {
       "brand",
       "issue",
       "quote",
+      "footerText",
+      "articleTitle",
     ] as const)
       if (typeof v[key] === "string")
         d[key] = v[key].slice(0, key === "title" ? 80 : 160);
@@ -45,7 +50,7 @@ function readDraft(): Design {
           (id: unknown) =>
             typeof id === "string" && MOTIFS.some((m) => m.id === id),
         )
-        .slice(0, 4);
+        .slice(0, 24);
     for (const [key, min, max] of [
       ["titleSize", 32, 96],
       ["tracking", -2, 12],
@@ -59,7 +64,19 @@ function readDraft(): Design {
     if (v.font === "serif" || v.font === "sans") d.font = v.font;
     if (["top-left", "top-right", "bottom-left"].includes(v.brandPosition))
       d.brandPosition = v.brandPosition;
-    if (["gold-dark", "ivory-crimson", "frosted-glass"].includes(v.brandTheme))
+    if (
+      [
+        "gold-dark",
+        "ivory-crimson",
+        "frosted-glass",
+        "ruby-seal",
+        "jade-ink",
+        "cyber-neon",
+        "platinum",
+        "sunset",
+        "sticker",
+      ].includes(v.brandTheme)
+    )
       d.brandTheme = v.brandTheme;
     if (["line", "painted", "luminous"].includes(v.visualMode))
       d.visualMode = v.visualMode;
@@ -83,6 +100,59 @@ function readDraft(): Design {
       );
     if (Number.isFinite(v.subtitleSize))
       d.subtitleSize = Math.max(12, Math.min(28, v.subtitleSize));
+    if (v.layerVersion === 1) {
+      d.layerVersion = 1;
+      d.hiddenElements = Array.isArray(v.hiddenElements)
+        ? v.hiddenElements.filter(
+            (id: unknown) => typeof id === "string" && d.elements.includes(id),
+          )
+        : [];
+      for (const key of [
+        "showThemeArtwork",
+        "showBook",
+        "showTemplateArt",
+      ] as const)
+        if (typeof v[key] === "boolean") d[key] = v[key];
+    } else {
+      if (d.family === "classic") {
+        const defaults = classicLayerIds(d.classicBook);
+        const categories = ["center", "side", "sky", "bottom"] as const;
+        d.elements = [
+          ...new Set([
+            ...defaults.filter((_, i) => !d.classicElements[categories[i]]),
+            ...Object.values(d.classicElements)
+              .filter((id) => id !== "none")
+              .map((id) => "original:" + id),
+            ...d.elements,
+          ]),
+        ];
+      } else if (d.visualMode !== "line")
+        d.elements = [...new Set(["scene:" + d.family, ...d.elements])];
+    }
+    if (v.layerTransforms && typeof v.layerTransforms === "object")
+      d.layerTransforms = Object.fromEntries(
+        Object.entries(v.layerTransforms)
+          .filter(
+            ([id, t]) =>
+              d.elements.includes(id) &&
+              t &&
+              typeof t === "object" &&
+              ["x", "y", "scale"].every((k) =>
+                Number.isFinite((t as Record<string, unknown>)[k]),
+              ),
+          )
+          .map(([id, t]) => {
+            const v = t as { x: number; y: number; scale: number };
+            return [
+              id,
+              {
+                x: Math.max(-400, Math.min(400, v.x)),
+                y: Math.max(-180, Math.min(180, v.y)),
+                scale: Math.max(40, Math.min(160, v.scale)),
+              },
+            ];
+          }),
+      );
     return d;
   } catch {
     return INITIAL;
@@ -125,6 +195,7 @@ function App() {
   const [themeFilter, setThemeFilter] = useState<
     "all" | "classic" | "category" | "modern"
   >("all");
+  const [showLayers, setShowLayers] = useState(true);
   const [query, setQuery] = useState("");
   const [hasOverflow, setHasOverflow] = useState(false);
   const [saving, setSaving] = useState("已自动保存");
@@ -220,30 +291,27 @@ function App() {
     setFamilyFilter(family);
   };
   const toggleMotif = (id: string) => {
-    const target = MOTIFS.find((m) => m.id === id);
-    if (!target) return;
     const active = d.elements.includes(id);
-    const patch: Partial<Design> = {
+    const category = MOTIFS.find((m) => m.id === id)?.category;
+    const count = d.elements.filter(
+      (x) => MOTIFS.find((m) => m.id === x)?.category === category,
+    ).length;
+    const layerTransforms = { ...d.layerTransforms };
+    if (active) delete layerTransforms[id];
+    else
+      layerTransforms[id] = {
+        x: -Math.min(3, count) * 85,
+        y: Math.min(3, count) * 24,
+        scale: count ? 80 : 100,
+      };
+    update({
       elements: active
         ? d.elements.filter((x) => x !== id)
-        : [
-            ...d.elements.filter(
-              (x) =>
-                MOTIFS.find((m) => m.id === x)?.category !== target.category,
-            ),
-            id,
-          ],
-    };
-    if (d.family === "classic")
-      patch.classicElements = {
-        ...d.classicElements,
-        [target.category]: active
-          ? "none"
-          : id.startsWith("original:")
-            ? id.slice(9)
-            : "none",
-      };
-    update(patch);
+        : [...d.elements, id],
+      hiddenElements: d.hiddenElements.filter((x) => x !== id),
+      showThemeArtwork: true,
+      layerTransforms,
+    });
   };
   async function download() {
     if (!canvasRef.current || exporting.current) return;
@@ -285,7 +353,14 @@ function App() {
   );
   const field = (
     key:
-      "title" | "subtitle" | "eyebrow" | "author" | "brand" | "issue" | "quote",
+      | "title"
+      | "subtitle"
+      | "eyebrow"
+      | "author"
+      | "brand"
+      | "issue"
+      | "quote"
+      | "footerText",
     label: string,
     multiline = false,
   ) => (
@@ -406,6 +481,7 @@ function App() {
                   {field("issue", "期刊 / 编号")}
                 </div>
                 {field("author", "作者 / 底部署名")}
+                {field("footerText", "右下角角标（留空可隐藏）")}
                 <div className="section-label">字体与节奏</div>
                 <div className="segmented">
                   <button
@@ -465,6 +541,12 @@ function App() {
                           ["gold-dark", "曜石黑金"],
                           ["ivory-crimson", "象牙朱砂"],
                           ["frosted-glass", "磨砂琉璃"],
+                          ["ruby-seal", "赤金印章"],
+                          ["jade-ink", "青玉墨韵"],
+                          ["cyber-neon", "赛博霓虹"],
+                          ["platinum", "铂金银白"],
+                          ["sunset", "落日琉光"],
+                          ["sticker", "紫糖贴纸"],
                         ] as const
                       ).map(([id, name]) => (
                         <button
@@ -615,7 +697,12 @@ function App() {
                           update({
                             classicBook: e.target.value,
                             classicElements: {},
-                            elements: [],
+                            elements: classicLayerIds(e.target.value),
+                            hiddenElements: [],
+                            layerTransforms: {},
+                            showThemeArtwork: true,
+                            showBook: true,
+                            showTemplateArt: true,
                           })
                         }
                       >
@@ -652,6 +739,8 @@ function App() {
                         onChange={(e) =>
                           update({
                             bookStyle: e.target.value as Design["bookStyle"],
+                            showBook: true,
+                            showThemeArtwork: true,
                           })
                         }
                       >
@@ -833,6 +922,9 @@ function App() {
                     onClick={() =>
                       update({
                         elements: [],
+                        hiddenElements: [],
+                        showBook: false,
+                        showTemplateArt: false,
                         classicElements: {
                           center: "none",
                           side: "none",
@@ -845,26 +937,18 @@ function App() {
                     清空
                   </button>
                 </div>
-                <div className="selected-elements">
-                  {d.elements.length ? (
-                    d.elements.map((id) => (
-                      <button
-                        key={id}
-                        onClick={() => toggleMotif(id)}
-                        title="点击移除"
-                      >
-                        {MOTIFS.find((m) => m.id === id)?.name}
-                        <span>×</span>
-                      </button>
-                    ))
-                  ) : (
-                    <p>纯文字也很好看，试着留一点白。</p>
-                  )}
-                </div>
+                <LayerPanel
+                  design={d}
+                  onChange={update}
+                  onAdd={() => {
+                    setQuery("");
+                    setCategory("center");
+                  }}
+                />
                 {range("artOpacity", "元素浓度", 10, 100, "%")}
                 {range("artScale", "元素大小", 60, 140, "%")}
                 <div className="quiet-note">
-                  每个位置可选 1 个元素，最多组合 4 层。再次点击即可移除。
+                  同一位置可叠加多个元素。选中主题后，可逐层隐藏、删除、替换，也可以继续添加。
                 </div>
               </>
             )}
@@ -917,14 +1001,6 @@ function App() {
           <div className="canvas-stage" ref={stageRef}>
             <div className="canvas-meta">
               <span>{activeLayout.name}</span>
-              {d.family !== "classic" && (
-                <button
-                  className="classic-return"
-                  onClick={() => applyFamily("classic")}
-                >
-                  ↶ 回到原版经典
-                </button>
-              )}
               <span>公众号头图 · 2.35 : 1</span>
             </div>
             <div
@@ -973,46 +1049,25 @@ function App() {
             </div>
           </div>
           <div className="below-canvas">
-            <div className="reading-preview">
-              <span className="overline">IN THE FEED</span>
-              <h3>出现在读者眼前</h3>
-              <p>看看封面在消息卡片里的实际阅读感受。</p>
-              <div className="feed-card">
-                <div className="feed-cover">
-                  <div
-                    style={{
-                      width: 1000,
-                      height: 426,
-                      transform: "scale(.28)",
-                      transformOrigin: "top left",
-                    }}
-                  >
-                    <CoverCanvas design={d} preview />
-                  </div>
-                </div>
-                <div className="feed-text">
-                  <b>{d.title.replace(/\n/g, "")}</b>
-                  <small>
-                    {d.brand || "你的公众号"}
-                    <span>刚刚</span>
-                  </small>
-                </div>
-              </div>
-            </div>
-            <div className="design-note">
-              <span className="note-symbol">✳</span>
-              <span className="overline">A LITTLE DESIGN NOTE</span>
-              <h3>让好书，自带光芒。</h3>
-              <p>
-                原版装帧与新的灵感，
-                <br />
-                为每一种阅读偏好，
-                <br />
-                找到属于它的视觉语言。
-              </p>
-              <span className="note-rule" />
-              <small>DESIGNED FOR YOUR WORDS</small>
-            </div>
+            <WeChatPreview design={d} onChange={update} />
+            <section className="layer-panel">
+              <header>
+                <h3>当前主题与图层</h3>
+                <button onClick={() => setShowLayers(!showLayers)}>
+                  {showLayers ? "收起面板" : "展开面板"}
+                </button>
+              </header>
+              {showLayers && (
+                <LayerPanel
+                  design={d}
+                  onChange={update}
+                  onAdd={() => {
+                    setTab("elements");
+                    setMobilePanel(true);
+                  }}
+                />
+              )}
+            </section>
           </div>
           <div className="preview-bottom">
             <span>

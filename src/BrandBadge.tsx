@@ -1,5 +1,14 @@
 export type BrandPosition = "top-left" | "top-right" | "bottom-left";
-export type BrandTheme = "gold-dark" | "ivory-crimson" | "frosted-glass";
+export type BrandTheme =
+  | "gold-dark"
+  | "ivory-crimson"
+  | "frosted-glass"
+  | "ruby-seal"
+  | "jade-ink"
+  | "cyber-neon"
+  | "platinum"
+  | "sunset"
+  | "sticker";
 export function AidouBrandBadge({
   position,
   theme,
@@ -46,12 +55,49 @@ export function AidouBrandBadge({
       title: "text-white",
       sub: "text-amber-300",
     },
+    "ruby-seal": {
+      wrapper: "brand-extra brand-ruby-seal",
+      iconBg: "brand-icon-ruby-seal",
+      title: "brand-title-ruby-seal",
+      sub: "brand-sub-ruby-seal",
+    },
+    "jade-ink": {
+      wrapper: "brand-extra brand-jade-ink",
+      iconBg: "brand-icon-jade-ink",
+      title: "brand-title-jade-ink",
+      sub: "brand-sub-jade-ink",
+    },
+    "cyber-neon": {
+      wrapper: "brand-extra brand-cyber-neon",
+      iconBg: "brand-icon-cyber-neon",
+      title: "brand-title-cyber-neon",
+      sub: "brand-sub-cyber-neon",
+    },
+    platinum: {
+      wrapper: "brand-extra brand-platinum",
+      iconBg: "brand-icon-platinum",
+      title: "brand-title-platinum",
+      sub: "brand-sub-platinum",
+    },
+    sunset: {
+      wrapper: "brand-extra brand-sunset",
+      iconBg: "brand-icon-sunset",
+      title: "brand-title-sunset",
+      sub: "brand-sub-sunset",
+    },
+    sticker: {
+      wrapper: "brand-extra brand-sticker",
+      iconBg: "brand-icon-sticker",
+      title: "brand-title-sticker",
+      sub: "brand-sub-sticker",
+    },
   };
 
-  const st = themeStyles[theme];
+  const st = themeStyles[theme] || themeStyles["gold-dark"];
 
   return (
     <div
+      data-brand-theme={theme}
       className={`absolute z-30 ${posClasses[position]} flex items-center gap-2.5 rounded-full pl-1.5 pr-4 py-1.5 ${st.wrapper}`}
     >
       {/* 品牌星芒书页徽标 */}

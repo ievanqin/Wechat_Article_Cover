@@ -1,3 +1,4 @@
+import { SculptureArt } from "./SculptureArt";
 import { useId } from "react";
 import type { Family } from "./catalog";
 
@@ -7,21 +8,52 @@ export function RichScene({
   accent,
   ink,
   mode = "painted",
+  thumbnail = false,
 }: {
   family: Family;
   accent: string;
   ink: string;
   mode?: string;
+  thumbnail?: boolean;
 }) {
+  const originalFamily = family;
+  const emojiSet: Record<string, string[]> = {
+    emojicosmos: ["🪐", "🚀", "🛸", "✨"],
+    emojiai: ["🤖", "🧠", "💡", "✨"],
+    emojireading: ["📚", "☕", "🌙", "✨"],
+  };
+  const emoji = emojiSet[family];
+  const aliases: Record<string, Family> = {
+    nebula: "science",
+    aicore: "tech",
+    noirillustration: "poetry",
+    dreamforest: "nature",
+    cybercity: "business",
+  };
+  family = aliases[family] || family;
   const uid = useId().replace(/:/g, "");
   const id = (s: string) => `${uid}-${s}`;
   const fill = (s: string) => `url(#${id(s)})`;
+  const sculpture: Record<string, string> = {
+    chromesculpt: "chrome-orbit",
+    clayrelief: "clay-disc",
+    glassribbon: "glass-loop",
+    abstractforms: "liquid-blob",
+  };
+  if (sculpture[originalFamily])
+    return (
+      <SculptureArt
+        kind={sculpture[originalFamily]}
+        accent={accent}
+        thumbnail={thumbnail}
+      />
+    );
   const isBook = ["library", "literary", "editorial"].includes(family);
   const isCosmos = ["science", "tech"].includes(family);
   return (
     <svg
       className={`rich-scene scene-${family}`}
-      viewBox="0 0 1000 426"
+      viewBox={thumbnail ? "580 40 420 360" : "0 0 1000 426"}
       aria-hidden="true"
     >
       <defs>
@@ -86,7 +118,159 @@ export function RichScene({
           />
         ))}
       </g>
-      {isBook ? (
+      {[
+        "magazinebold",
+        "retroprint",
+        "literarycollage",
+        "orientalcut",
+      ].includes(originalFamily) ? (
+        <g filter={fill("shadow")}>
+          {originalFamily === "magazinebold" ? (
+            <>
+              <rect x="640" y="63" width="302" height="300" fill="#f1eadb" />
+              <rect x="658" y="82" width="265" height="40" fill="#242832" />
+              <text
+                x="790"
+                y="110"
+                fill="#efe6d3"
+                textAnchor="middle"
+                fontFamily="Georgia"
+                fontSize="25"
+                letterSpacing="8"
+              >
+                VOLUME
+              </text>
+              <rect
+                x="658"
+                y="138"
+                width="148"
+                height="145"
+                fill={fill("cover")}
+              />
+              <circle cx="731" cy="204" r="42" fill={accent} />
+              {Array.from({ length: 11 }, (_, i) => (
+                <path
+                  key={i}
+                  d={`M820 ${143 + i * 13}H922 M658 ${302 + i * 5}H922`}
+                  stroke="#747369"
+                  strokeWidth="2"
+                />
+              ))}
+              <text
+                x="665"
+                y="272"
+                fontSize="38"
+                fill="#fff9e9"
+                fontWeight="900"
+              >
+                026
+              </text>
+            </>
+          ) : originalFamily === "retroprint" ? (
+            <>
+              <circle cx="800" cy="200" r="134" fill="#db9a61" />
+              {Array.from({ length: 5 }, (_, i) => (
+                <path
+                  key={i}
+                  d={`M${669 + i * 21} 302V182a${131 - i * 21} ${131 - i * 21} 0 0 1 ${262 - i * 42} 0V302`}
+                  fill="none"
+                  stroke={
+                    ["#763f35", "#d19660", "#f1c790", "#837e50", "#a4553e"][i]
+                  }
+                  strokeWidth="23"
+                />
+              ))}
+              <path
+                d="M645 317H954 M645 334H954"
+                stroke="#774b33"
+                strokeWidth="3"
+              />
+            </>
+          ) : originalFamily === "literarycollage" ? (
+            <>
+              <g transform="rotate(-12 790 200)">
+                <rect x="661" y="60" width="241" height="290" fill="#e6d7b6" />
+                {Array.from({ length: 18 }, (_, i) => (
+                  <path
+                    key={i}
+                    d={`M680 ${86 + i * 13}H875`}
+                    stroke="#a59779"
+                    strokeWidth="1"
+                  />
+                ))}
+                <rect x="695" y="125" width="220" height="188" fill="#56706a" />
+                <path
+                  d="M805 305V153 M805 265Q726 266 746 197Q808 204 805 265 M805 221Q874 224 878 161Q816 161 805 221"
+                  fill="#c3c49b"
+                  stroke="#e4e4c7"
+                  strokeWidth="2"
+                />
+              </g>
+              <rect
+                x="869"
+                y="68"
+                width="58"
+                height="78"
+                fill="#a56b4f"
+                stroke="#e7d9bb"
+                strokeDasharray="4 3"
+                strokeWidth="4"
+              />
+              <circle cx="897" cy="107" r="19" fill="none" stroke="#eadbc2" />
+            </>
+          ) : (
+            <>
+              {Array.from({ length: 5 }, (_, i) => (
+                <path
+                  key={i}
+                  d={`M${640 + i * 20} 355V${183 + i * 10}Q800 ${12 + i * 30} ${960 - i * 20} ${183 + i * 10}V355Z`}
+                  fill={
+                    ["#731e30", "#ae3f45", "#d57568", "#e3b79b", "#f0d5b1"][i]
+                  }
+                />
+              ))}
+              <path
+                d="M723 310V217H877V310Z M699 215L800 150L901 215Z M730 169L800 122L870 169Z"
+                fill="#762839"
+              />
+              <path
+                d="M788 245H815V310 M700 322H900"
+                stroke="#f0d5b1"
+                strokeWidth="5"
+              />
+            </>
+          )}
+        </g>
+      ) : emoji ? (
+        <g className="emoji-art">
+          <circle
+            cx="805"
+            cy="205"
+            r="128"
+            fill={fill("cover")}
+            stroke={accent}
+            strokeOpacity=".4"
+          />
+          <text x="805" y="255" fontSize="138" textAnchor="middle">
+            {emoji[0]}
+          </text>
+          <text x="675" y="130" fontSize="54">
+            {emoji[1]}
+          </text>
+          <text x="895" y="110" fontSize="48">
+            {emoji[2]}
+          </text>
+          <text x="901" y="335" fontSize="44">
+            {emoji[3]}
+          </text>
+          <path
+            d="M615 326Q800 380 963 215"
+            fill="none"
+            stroke={accent}
+            strokeDasharray="4 8"
+          />
+        </g>
+      ) : isBook ? (
         <g filter={fill("shadow")}>
           <ellipse
             cx="790"

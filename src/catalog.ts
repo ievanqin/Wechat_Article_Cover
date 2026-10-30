@@ -135,6 +135,118 @@ export const FAMILIES = [
     desc: "立体精装书、书页、烫金与藏书票",
     color: "#6b3b32",
   },
+  {
+    id: "nebula",
+    name: "星云远航",
+    en: "NEBULA VOYAGE",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#222553",
+  },
+  {
+    id: "aicore",
+    name: "AI 智能体",
+    en: "AI CONSCIOUSNESS",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#173b42",
+  },
+  {
+    id: "noirillustration",
+    name: "午夜插画",
+    en: "MIDNIGHT TALES",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#453153",
+  },
+  {
+    id: "dreamforest",
+    name: "暗夜秘境",
+    en: "ENCHANTED FOREST",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#153e36",
+  },
+  {
+    id: "emojicosmos",
+    name: "宇宙 Emoji",
+    en: "COSMIC EMOJI",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#302653",
+  },
+  {
+    id: "emojiai",
+    name: "AI Emoji",
+    en: "ROBOT PLAYGROUND",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#173c56",
+  },
+  {
+    id: "emojireading",
+    name: "阅读 Emoji",
+    en: "READING CLUB",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#3b2947",
+  },
+  {
+    id: "cybercity",
+    name: "赛博都市",
+    en: "CYBER CITY",
+    desc: "深色插画与可自由编辑的主题图层",
+    color: "#222040",
+  },
+  {
+    id: "magazinebold",
+    name: "杂志特刊",
+    en: "BOLD EDITORIAL",
+    color: "#d7d6cc",
+    desc: "独立排版与可编辑的材质插画",
+  },
+  {
+    id: "retroprint",
+    name: "复古印刷",
+    en: "RETRO IMPRESSIONS",
+    color: "#b46c3c",
+    desc: "独立排版与可编辑的材质插画",
+  },
+  {
+    id: "literarycollage",
+    name: "文艺拼贴",
+    en: "POETIC COLLAGE",
+    color: "#a1a495",
+    desc: "独立排版与可编辑的材质插画",
+  },
+  {
+    id: "abstractforms",
+    name: "抽象构成",
+    en: "ABSTRACT FORMS",
+    color: "#7366ac",
+    desc: "独立排版与可编辑的材质插画",
+  },
+  {
+    id: "orientalcut",
+    name: "国风剪纸",
+    en: "ORIENTAL PAPER",
+    color: "#9c3b39",
+    desc: "独立排版与可编辑的材质插画",
+  },
+  {
+    id: "chromesculpt",
+    name: "液态铬金",
+    en: "LIQUID CHROME",
+    color: "#3c4c70",
+    desc: "独立排版与可编辑的材质插画",
+  },
+  {
+    id: "clayrelief",
+    name: "陶土浮雕",
+    en: "CLAY & RELIEF",
+    color: "#a67e6c",
+    desc: "独立排版与可编辑的材质插画",
+  },
+  {
+    id: "glassribbon",
+    name: "玻璃缎带",
+    en: "GLASS RIBBONS",
+    color: "#6f7fbb",
+    desc: "独立排版与可编辑的材质插画",
+  },
 ] as const;
 export type Family = (typeof FAMILIES)[number]["id"];
 export type Palette = {
@@ -183,6 +295,22 @@ const newColors: [string, string, string, string, Family][] = [
   ["古典石阶", "#e6dfcc", "#353e3e", "#827655", "philosophy"],
   ["月色荷香", "#18313e", "#eff6ee", "#d8c59c", "poetry"],
   ["藏书红金", "#2e1020", "#fff0d6", "#e3bd75", "library"],
+  ["深空紫电", "#0b0b25", "#f4f1ff", "#b79aff", "nebula"],
+  ["智能青光", "#061e26", "#e1ffff", "#58ead8", "aicore"],
+  ["午夜莓紫", "#21132e", "#fff0f9", "#eb9bc1", "noirillustration"],
+  ["幽林萤火", "#071f21", "#efffe8", "#9de7ab", "dreamforest"],
+  ["银河软糖", "#17102c", "#fff1ff", "#e2a8ff", "emojicosmos"],
+  ["机器蓝糖", "#081c32", "#ecfaff", "#78ceff", "emojiai"],
+  ["夜读橘糖", "#22152b", "#fff0de", "#ffbf82", "emojireading"],
+  ["赛博红蓝", "#10152d", "#f7f3ff", "#f080c3", "cybercity"],
+  ["特刊纸白", "#ebe9df", "#1d2427", "#ba4638", "magazinebold"],
+  ["复古油墨", "#e4ccb0", "#49382c", "#bd7045", "retroprint"],
+  ["拼贴苔绿", "#dce0cf", "#344339", "#829061", "literarycollage"],
+  ["抽象夜紫", "#171329", "#faf0ff", "#bea3f5", "abstractforms"],
+  ["朱砂剪影", "#341b24", "#fff0cf", "#d78b6f", "orientalcut"],
+  ["冷铬深蓝", "#111a2b", "#f2f7ff", "#a2c5ed", "chromesculpt"],
+  ["赤陶暖砂", "#d4b7a3", "#483730", "#a2644e", "clayrelief"],
+  ["极光玻璃", "#141d39", "#edf5ff", "#b0acff", "glassribbon"],
 ];
 export const PALETTES: Palette[] = [
   ...newColors.map(([name, bg, ink, accent, family], i) => ({
@@ -237,6 +365,22 @@ const names: Record<Family, string[]> = {
   philosophy: ["思辨之门", "人文对话", "秩序之美"],
   poetry: ["月下花影", "山水寄情", "诗意中轴"],
   library: ["精装典藏", "藏书对开", "经典扉页"],
+  nebula: ["星云远航 · 侧记", "星云远航 · 对开", "星云远航 · 中轴"],
+  aicore: ["AI 智能体 · 侧记", "AI 智能体 · 对开", "AI 智能体 · 中轴"],
+  noirillustration: ["午夜插画 · 侧记", "午夜插画 · 对开", "午夜插画 · 中轴"],
+  dreamforest: ["暗夜秘境 · 侧记", "暗夜秘境 · 对开", "暗夜秘境 · 中轴"],
+  emojicosmos: ["宇宙 Emoji · 侧记", "宇宙 Emoji · 对开", "宇宙 Emoji · 中轴"],
+  emojiai: ["AI Emoji · 侧记", "AI Emoji · 对开", "AI Emoji · 中轴"],
+  emojireading: ["阅读 Emoji · 侧记", "阅读 Emoji · 对开", "阅读 Emoji · 中轴"],
+  cybercity: ["赛博都市 · 侧记", "赛博都市 · 对开", "赛博都市 · 中轴"],
+  magazinebold: ["杂志特刊 · 封面", "杂志特刊 · 对开", "杂志特刊 · 剧场"],
+  retroprint: ["复古印刷 · 封面", "复古印刷 · 对开", "复古印刷 · 剧场"],
+  literarycollage: ["文艺拼贴 · 封面", "文艺拼贴 · 对开", "文艺拼贴 · 剧场"],
+  abstractforms: ["抽象构成 · 封面", "抽象构成 · 对开", "抽象构成 · 剧场"],
+  orientalcut: ["国风剪纸 · 封面", "国风剪纸 · 对开", "国风剪纸 · 剧场"],
+  chromesculpt: ["液态铬金 · 封面", "液态铬金 · 对开", "液态铬金 · 剧场"],
+  clayrelief: ["陶土浮雕 · 封面", "陶土浮雕 · 对开", "陶土浮雕 · 剧场"],
+  glassribbon: ["玻璃缎带 · 封面", "玻璃缎带 · 对开", "玻璃缎带 · 剧场"],
 };
 export const LAYOUTS = FAMILIES.flatMap((f) =>
   names[f.id].map((name, variant) => ({
@@ -421,12 +565,20 @@ MOTIFS.push(
   })),
 );
 export interface Design {
+  footerText: string;
+  articleTitle: string;
+  layerTransforms: Record<string, { x: number; y: number; scale: number }>;
+  layerVersion: number;
+  hiddenElements: string[];
+  showThemeArtwork: boolean;
+  showBook: boolean;
+  showTemplateArt: boolean;
   classicBook: string;
   classicElements: Partial<
     Record<"center" | "side" | "sky" | "bottom", string>
   >;
   brandPosition: "top-left" | "top-right" | "bottom-left";
-  brandTheme: "gold-dark" | "ivory-crimson" | "frosted-glass";
+  brandTheme: import("./BrandBadge").BrandTheme;
   bookStyle: "open-starlight-book" | "royal-sealed-tome" | "stacked-classics";
   ornament: boolean;
   visualMode: "line" | "painted" | "luminous";
@@ -452,6 +604,14 @@ export interface Design {
   font: "serif" | "sans";
 }
 export const INITIAL: Design = {
+  footerText: "IDOL BOOKLIST",
+  articleTitle: "",
+  layerVersion: 1,
+  layerTransforms: {},
+  hiddenElements: [],
+  showThemeArtwork: true,
+  showBook: true,
+  showTemplateArt: true,
   classicBook: "along-the-river-code",
   classicElements: {},
   brandPosition: "top-left",
@@ -648,4 +808,254 @@ export const PRESETS: Record<Family, Partial<Design>> = {
     artOpacity: 90,
     visualMode: "painted",
   },
+  nebula: {
+    layout: "nebula-0",
+    palette: "new-36",
+    background: "bg-19-5",
+    elements: [],
+    font: "serif",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  aicore: {
+    layout: "aicore-0",
+    palette: "new-37",
+    background: "bg-20-5",
+    elements: [],
+    font: "sans",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  noirillustration: {
+    layout: "noirillustration-0",
+    palette: "new-38",
+    background: "bg-21-5",
+    elements: [],
+    font: "serif",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  dreamforest: {
+    layout: "dreamforest-0",
+    palette: "new-39",
+    background: "bg-22-5",
+    elements: [],
+    font: "serif",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  emojicosmos: {
+    layout: "emojicosmos-0",
+    palette: "new-40",
+    background: "bg-23-5",
+    elements: [],
+    font: "serif",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  emojiai: {
+    layout: "emojiai-0",
+    palette: "new-41",
+    background: "bg-24-5",
+    elements: [],
+    font: "sans",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  emojireading: {
+    layout: "emojireading-0",
+    palette: "new-42",
+    background: "bg-25-5",
+    elements: [],
+    font: "serif",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  cybercity: {
+    layout: "cybercity-0",
+    palette: "new-43",
+    background: "bg-26-5",
+    elements: [],
+    font: "sans",
+    visualMode: "luminous",
+    artOpacity: 95,
+  },
+  magazinebold: {
+    layout: "magazinebold-0",
+    palette: "new-44",
+    background: "bg-27-1",
+    elements: [],
+    font: "sans",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
+  retroprint: {
+    layout: "retroprint-0",
+    palette: "new-45",
+    background: "bg-28-1",
+    elements: [],
+    font: "serif",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
+  literarycollage: {
+    layout: "literarycollage-0",
+    palette: "new-46",
+    background: "bg-29-1",
+    elements: [],
+    font: "serif",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
+  abstractforms: {
+    layout: "abstractforms-0",
+    palette: "new-47",
+    background: "bg-30-1",
+    elements: [],
+    font: "sans",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
+  orientalcut: {
+    layout: "orientalcut-0",
+    palette: "new-48",
+    background: "bg-31-1",
+    elements: [],
+    font: "serif",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
+  chromesculpt: {
+    layout: "chromesculpt-0",
+    palette: "new-49",
+    background: "bg-32-1",
+    elements: [],
+    font: "sans",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
+  clayrelief: {
+    layout: "clayrelief-0",
+    palette: "new-50",
+    background: "bg-33-1",
+    elements: [],
+    font: "serif",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
+  glassribbon: {
+    layout: "glassribbon-0",
+    palette: "new-51",
+    background: "bg-34-1",
+    elements: [],
+    font: "sans",
+    visualMode: "painted",
+    artOpacity: 95,
+  },
 };
+
+export function classicLayerIds(book: string): string[] {
+  const sets: Record<string, string[]> = {
+    "along-the-river-code": [
+      "bianjing-rainbow-bridge",
+      "bianjing-fanlou-scroll",
+      "song-cranes-clouds",
+      "bianhe-river-boats",
+    ],
+    "bartleby-the-scrivener": [
+      "bartleby-wall-window",
+      "bartleby-scrolls-quill",
+      "bartleby-dead-letters",
+      "bartleby-wallstreet",
+    ],
+    "rain-falling-on-me": [
+      "hometown-eaves",
+      "train-plum",
+      "spring-swallows",
+      "karst-hills",
+    ],
+    "hungry-prosperous-age": [
+      "imperial-palace",
+      "famine-seal",
+      "macartney-ship",
+      "great-wall",
+    ],
+    "cognitive-awakening": [
+      "brain-pyramid",
+      "brain-wings",
+      "meta-eye",
+      "iceberg-curve",
+    ],
+  };
+  return (
+    sets[book] || ["iron-throne", "wolf-dragon", "raven-leaves", "ice-wall"]
+  ).map((id) => "original:" + id);
+}
+for (const f of FAMILIES) {
+  if (f.id !== "classic")
+    MOTIFS.push({
+      id: "scene:" + f.id,
+      name: f.name + " · 主题插画",
+      category: "center",
+      family: f.id,
+      shape: -2,
+    });
+  const preset = PRESETS[f.id];
+  preset.elements =
+    f.id === "classic"
+      ? classicLayerIds(INITIAL.classicBook)
+      : [
+          ...(preset.visualMode === "line" ? [] : ["scene:" + f.id]),
+          ...(preset.elements || []),
+        ];
+  Object.assign(preset, {
+    layerVersion: 1,
+    layerTransforms: {},
+    hiddenElements: [],
+    showThemeArtwork: true,
+    showBook: true,
+    showTemplateArt: true,
+  });
+}
+INITIAL.elements = classicLayerIds(INITIAL.classicBook);
+export const EMOJI_MOTIFS = [
+  ["rocket", "火箭", "🚀"],
+  ["robot", "机器人", "🤖"],
+  ["planet", "环形星球", "🪐"],
+  ["moon", "月亮", "🌙"],
+  ["star", "闪亮星星", "✨"],
+  ["book", "阅读书本", "📚"],
+  ["brain", "大脑", "🧠"],
+  ["ufo", "飞碟", "🛸"],
+  ["alien", "外星访客", "👽"],
+  ["spark", "创意灵感", "💡"],
+] as const;
+MOTIFS.push(
+  ...EMOJI_MOTIFS.map(([id, name]) => ({
+    id: "emoji:" + id,
+    name,
+    category: "center" as const,
+    family: "emojicosmos" as Family,
+    shape: -3,
+  })),
+);
+
+export const SCULPT_MOTIFS = [
+  ["chrome-orbit", "铬金轨道"],
+  ["clay-disc", "陶土凹凸圆盘"],
+  ["glass-loop", "玻璃扭环"],
+  ["ribbed-wave", "褶皱波纹"],
+  ["emboss-seal", "浮雕印记"],
+  ["folded-paper", "折纸立方"],
+  ["liquid-blob", "液态雕塑"],
+  ["stacked-arch", "层叠拱门"],
+] as const;
+MOTIFS.push(
+  ...SCULPT_MOTIFS.map(([id, name]) => ({
+    id: "sculpt:" + id,
+    name,
+    category: "center" as const,
+    family: "chromesculpt" as Family,
+    shape: -4,
+  })),
+);

@@ -64,12 +64,17 @@ export const CoverCanvas = forwardRef<
     >
       {family === "classic" ? (
         <div className="classic-canvas-scene">
-          <ClassicScene design={d} />
-          {d.elements
-            .filter((id) => !id.startsWith("original:"))
-            .map((id) => (
-              <MotifArt key={id} id={id} color={p.accent} mode={d.visualMode} />
-            ))}
+          <ClassicScene
+            design={{
+              ...d,
+              classicElements: {
+                center: "none",
+                side: "none",
+                sky: "none",
+                bottom: "none",
+              },
+            }}
+          />
         </div>
       ) : (
         <>
@@ -87,34 +92,6 @@ export const CoverCanvas = forwardRef<
               <span />
             </div>
           )}
-          <div
-            className="artwork-layer"
-            style={{
-              opacity: d.artOpacity / 100,
-              transform: `scale(${d.artScale / 100})`,
-            }}
-          >
-            {d.visualMode !== "line" && (
-              <RichScene
-                family={family}
-                accent={p.accent}
-                ink={p.ink}
-                mode={d.visualMode}
-              />
-            )}
-            {d.elements.map((id) =>
-              id.startsWith("original:") ? (
-                <ClassicMotif key={id} id={id} design={d} />
-              ) : (
-                <MotifArt
-                  key={id}
-                  id={id}
-                  color={p.accent}
-                  mode={d.visualMode}
-                />
-              ),
-            )}
-          </div>
           <div className="cover-topline">
             <span />
             <span>{d.issue}</span>
@@ -127,14 +104,42 @@ export const CoverCanvas = forwardRef<
             <div className="cover-author">{d.author}</div>
           </div>
           <div className="cover-bottomline">
-            <span>{FAMILIES.find((f) => f.id === family)?.en}</span>
-            <span>
-              {family === "tech"
-                ? "SYSTEM / READING / 026"
-                : "一页一世界 · 阅读有回响"}
-            </span>
+            <span />
+            {d.footerText && <span>{d.footerText}</span>}
           </div>
         </>
+      )}
+      {d.showThemeArtwork && (
+        <div
+          className="artwork-layer"
+          style={{
+            opacity: d.artOpacity / 100,
+            transform: `scale(${d.artScale / 100})`,
+          }}
+        >
+          {d.elements
+            .filter((id) => !d.hiddenElements.includes(id))
+            .map((id) => (
+              <div
+                className="editable-art-layer"
+                data-layer-id={id}
+                key={id}
+                style={{
+                  transform: `translate(${d.layerTransforms[id]?.x || 0}px,${d.layerTransforms[id]?.y || 0}px) scale(${(d.layerTransforms[id]?.scale || 100) / 100})`,
+                  transformOrigin: "80% 50%",
+                }}
+              >
+                {id.startsWith("original:") ? (
+                  <ClassicMotif
+                    id={id}
+                    design={{ ...d, artOpacity: 100, artScale: 100 }}
+                  />
+                ) : (
+                  <MotifArt id={id} color={p.accent} mode={d.visualMode} />
+                )}
+              </div>
+            ))}
+        </div>
       )}
       {d.showBrand && (
         <div className="brand-layer">

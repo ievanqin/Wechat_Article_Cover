@@ -1,5 +1,8 @@
+import {SculptureArt} from "./SculptureArt";
 import { ClassicMotif } from "./ClassicScene";
 import { INITIAL } from "./catalog";
+import { RichScene } from "./RichScene";
+import { EMOJI_MOTIFS, FAMILIES } from "./catalog";
 import { MOTIFS } from "./catalog";
 const centerPaths = [
   "M50 15a35 35 0 1 0 0 70a35 35 0 1 0 0-70 M5 70Q50 0 95 30Q50 100 5 70 M20 8Q90 30 80 90",
@@ -126,6 +129,37 @@ export function MotifArt({
         </div>
       </div>
     );
+  if (id.startsWith("scene:"))
+    return (
+      <RichScene
+        family={motif.family}
+        accent={color}
+        ink={color}
+        mode={mode}
+        thumbnail={thumbnail}
+      />
+    );
+  if (id.startsWith("emoji:")) {
+    const emoji = EMOJI_MOTIFS.find((m) => "emoji:" + m[0] === id)?.[2];
+    return (
+      <svg
+        className={thumbnail ? "" : "motif-art"}
+        viewBox={thumbnail ? "0 0 100 100" : "0 0 1000 426"}
+        aria-hidden="true"
+      >
+        <text
+          className="emoji-art"
+          x={thumbnail ? 50 : 805}
+          y={thumbnail ? 79 : 280}
+          textAnchor="middle"
+          fontSize={thumbnail ? 74 : 155}
+        >
+          {emoji}
+        </text>
+      </svg>
+    );
+  }
+  if(id.startsWith('sculpt:'))return <SculptureArt kind={id.slice(7)} accent={color} thumbnail={thumbnail}/>;
   const path = {
     center: centerPaths,
     side: sidePaths,

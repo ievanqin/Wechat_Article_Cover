@@ -2532,7 +2532,12 @@ export function ClassicScene({
     const strokeColor = palette.accentHex;
     if (rightSymbol === "sword-crown") {
       return (
-        <svg viewBox="0 0 100 100" className={sizeClass} fill="none">
+        <svg
+          data-template-art="true"
+          viewBox="0 0 100 100"
+          className={sizeClass}
+          fill="none"
+        >
           <circle
             cx="50"
             cy="50"
@@ -2564,7 +2569,12 @@ export function ClassicScene({
     }
     if (rightSymbol === "direwolf-dragon") {
       return (
-        <svg viewBox="0 0 100 100" className={sizeClass} fill="none">
+        <svg
+          data-template-art="true"
+          viewBox="0 0 100 100"
+          className={sizeClass}
+          fill="none"
+        >
           <circle
             cx="50"
             cy="50"
@@ -2590,7 +2600,12 @@ export function ClassicScene({
     }
     if (rightSymbol === "planet-orbit") {
       return (
-        <svg viewBox="0 0 100 100" className={sizeClass} fill="none">
+        <svg
+          data-template-art="true"
+          viewBox="0 0 100 100"
+          className={sizeClass}
+          fill="none"
+        >
           <circle
             cx="50"
             cy="50"
@@ -2623,7 +2638,12 @@ export function ClassicScene({
     }
     if (rightSymbol === "feather-quill") {
       return (
-        <svg viewBox="0 0 100 100" className={sizeClass} fill="none">
+        <svg
+          data-template-art="true"
+          viewBox="0 0 100 100"
+          className={sizeClass}
+          fill="none"
+        >
           <circle
             cx="50"
             cy="50"
@@ -2643,7 +2663,12 @@ export function ClassicScene({
       );
     }
     return (
-      <svg viewBox="0 0 100 100" className={sizeClass} fill="none">
+      <svg
+        data-template-art="true"
+        viewBox="0 0 100 100"
+        className={sizeClass}
+        fill="none"
+      >
         <circle
           cx="50"
           cy="50"
@@ -2677,6 +2702,7 @@ export function ClassicScene({
     accent = palette.accentHex,
     isEpicIceFire = false,
   ) => {
+    if (!d.showBook || !d.showThemeArtwork) return null;
     if (rightBookStyle === "open-starlight-book") {
       // 图案 B：翻开的星芒古籍（摊开厚重羊皮书页 + 升腾星芒与羽毛笔/纹章）
       return (
@@ -4642,7 +4668,6 @@ export function ClassicScene({
       {/* 固定位置的可复用品牌组件：「爱豆书单」（5 种风格共享同一锚点坐标） */}
 
       {/* 全局统一的模块化元素层（对所有 9 款版式模板全部生效） */}
-      {renderGlobalModularElements()}
 
       {/* 全局高定装帧细节增强层（四角镂空角花 + 中轴星盘标尺 + 金尘微粒） */}
       {showRichOrnament && (
@@ -4750,6 +4775,7 @@ export function ClassicScene({
           {/* 右侧：100% 纯静态书籍图案（无重复书名文字，粉丝一眼识书） */}
           <div className="relative z-20 flex items-center justify-center w-[32%] h-full">
             <svg
+              data-template-art="true"
               viewBox="0 0 200 200"
               className="absolute w-44 h-44 sm:w-56 sm:h-56 pointer-events-none opacity-35"
               fill="none"
@@ -4793,6 +4819,7 @@ export function ClassicScene({
           />
 
           <svg
+            data-template-art="true"
             viewBox="0 0 600 300"
             className="absolute inset-0 w-full h-full pointer-events-none opacity-25"
             fill="none"
@@ -5169,6 +5196,7 @@ export function ClassicScene({
         >
           {renderGlobalBackdropTexture()}
           <svg
+            data-template-art="true"
             viewBox="0 0 900 383"
             className="absolute inset-0 w-full h-full pointer-events-none z-10"
             preserveAspectRatio="none"
@@ -5267,6 +5295,7 @@ export function ClassicScene({
           <div className="absolute inset-[4%] border border-[#e5a93c]/25 pointer-events-none" />
           {resolvedCenter !== "none" && (
             <svg
+              data-template-art="true"
               viewBox="0 0 600 383"
               className="absolute inset-0 w-full h-full pointer-events-none"
               fill="none"
@@ -5416,6 +5445,7 @@ export function ClassicScene({
               <div className="flex flex-col items-center gap-2 opacity-90 mr-auto">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-sky-300/50 bg-[#0b1520]/90 flex items-center justify-center shadow-[0_0_35px_rgba(56,189,248,0.2)]">
                   <svg
+                    data-template-art="true"
                     viewBox="0 0 120 120"
                     className="w-16 h-16 sm:w-22 sm:h-22"
                   >
@@ -5470,6 +5500,7 @@ export function ClassicScene({
               <div className="flex flex-col items-center gap-2 opacity-90 ml-auto">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-amber-400/50 bg-[#240d0b]/90 flex items-center justify-center shadow-[0_0_35px_rgba(249,115,22,0.22)]">
                   <svg
+                    data-template-art="true"
                     viewBox="0 0 120 120"
                     className="w-16 h-16 sm:w-22 sm:h-22"
                   >
@@ -5516,6 +5547,7 @@ export function ClassicScene({
             }}
           />
           <svg
+            data-template-art="true"
             viewBox="0 0 800 340"
             className="absolute inset-0 w-full h-full pointer-events-none"
             fill="none"
@@ -5560,7 +5592,12 @@ export function ClassicScene({
 
           <div className="relative z-10 w-[42%] h-full flex items-end justify-center">
             {resolvedCenter !== "none" && (
-              <svg viewBox="0 0 320 300" className="w-full h-[94%]" fill="none">
+              <svg
+                data-template-art="true"
+                viewBox="0 0 320 300"
+                className="w-full h-[94%]"
+                fill="none"
+              >
                 <circle
                   cx="160"
                   cy="175"
@@ -5609,6 +5646,7 @@ export function ClassicScene({
             }}
           />
           <svg
+            data-template-art="true"
             viewBox="0 0 900 383"
             className="absolute inset-0 w-full h-full pointer-events-none"
             preserveAspectRatio="none"
@@ -5647,7 +5685,12 @@ export function ClassicScene({
 
           <div className="relative z-20 w-[44%] h-full flex items-end justify-center">
             {resolvedCenter !== "none" && (
-              <svg viewBox="0 0 320 280" className="w-full h-[94%]" fill="none">
+              <svg
+                data-template-art="true"
+                viewBox="0 0 320 280"
+                className="w-full h-[94%]"
+                fill="none"
+              >
                 <circle
                   cx="175"
                   cy="125"
@@ -5741,6 +5784,7 @@ export function ClassicScene({
           <div className="absolute top-[13%] right-[6%] w-44 h-[2px] bg-gradient-to-r from-transparent via-red-500 to-amber-200 rotate-[-12deg] opacity-85 pointer-events-none" />
 
           <svg
+            data-template-art="true"
             className="absolute right-[6%] top-1/2 -translate-y-1/2 w-[44%] h-[115%] opacity-20 pointer-events-none"
             viewBox="0 0 400 400"
             fill="none"
@@ -5857,7 +5901,7 @@ export function ClassicScene({
 
       {/* 右下角极简固定角标 */}
       <div className="absolute bottom-[6%] right-[4.2%] z-20 flex items-center gap-1.5 text-[9px] font-cinzel tracking-[0.22em] text-amber-200/70">
-        <span>IDOL BOOKLIST</span>
+        <span>{d.footerText}</span>
       </div>
 
       {/* 可选：安全网格参考层 */}
@@ -5893,7 +5937,19 @@ export function ClassicScene({
     </>
   );
 
-  return artOnly ? renderGlobalModularElements() : renderCoverScene(false);
+  return artOnly ? (
+    renderGlobalModularElements()
+  ) : (
+    <div
+      className={
+        d.showTemplateArt && d.showThemeArtwork
+          ? "classic-template"
+          : "classic-template template-art-off"
+      }
+    >
+      {renderCoverScene(false)}
+    </div>
+  );
 }
 export type BackgroundTemplateId =
   | "bg-digital-lab"
