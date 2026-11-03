@@ -1136,8 +1136,18 @@ export const WATERMARKS = [
   { id: "mix-celestial", name: "宇宙漫游" },
   { id: "mix-geometry", name: "几何拼贴" },
   { id: "mix-inkscape", name: "墨山与飞鸟" },
+{"id": "scene-silk", "name": "全幅丝绸流线"},
+{"id": "scene-horizon", "name": "远山日轮"},
+{"id": "scene-lattice", "name": "曲面网幕"},
+{"id": "scene-rings", "name": "偏心涟漪"},
+{"id": "mix-library", "name": "藏书与拱窗"},
+{"id": "mix-orchard", "name": "花枝与星光"},
+{"id": "mix-abstract", "name": "圆环与切片"},
+{"id": "mix-snow", "name": "雪岭与星河"},
 ] as const;
 export interface Design {
+ textSizes: Record<string,number>;
+ autoEyebrow:boolean;
   composition: CompositionId;
   fillMode: "theme" | "solid" | "linear" | "radial" | "mesh";
   fillColor: string;
@@ -1189,6 +1199,7 @@ export interface Design {
   font: FontId;
 }
 export const INITIAL: Design = {
+ textSizes:{},autoEyebrow:true,
  showBackground:true,
   composition: "legacy",
   fillMode: "theme",

@@ -20,12 +20,15 @@ export const CoverCanvas = forwardRef<
   useLayoutEffect(() => {
     const copy = copyRef.current;
     const title = copy?.querySelector<HTMLElement>(".cover-title");
+    for(const [key,selector] of Object.entries({subtitle:".cover-subtitle",eyebrow:".cover-eyebrow",author:".cover-author"})){const node=copy?.querySelector<HTMLElement>(selector);if(node&&d.textSizes[key])node.style.setProperty("font-size",d.textSizes[key]+"px","important");}
+
     if (!copy || !title) {
       onOverflow?.(false);
       return;
     }
     title.style.fontSize = "";
-    let size = parseFloat(getComputedStyle(title).fontSize);
+    title.style.setProperty("font-size", `${d.titleSize}px`, "important");
+    let size = d.titleSize;
     while (
       size > 18 &&
       (copy.scrollHeight > copy.clientHeight + 1 ||
@@ -60,6 +63,7 @@ export const CoverCanvas = forwardRef<
       className={`cover-canvas family-${family} composition-${variant} font-${d.font} visual-${d.visualMode} brand-${d.brandPosition} pattern-${bg.pattern} texture-${bg.family}`}
       style={
         {
+          ...Object.fromEntries(Object.entries(d.textSizes).map(([k,v])=>["--text-"+k,v+"px"])),
           "--paper": p.bg,
           "--ink": p.ink,
           "--accent": p.accent,

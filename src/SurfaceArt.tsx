@@ -331,6 +331,14 @@ function FullSurface({
   );
   let art;
   switch (kind) {
+    case "scene-silk": art=<>{Array.from({length:28},(_,i)=><path key={i} d={`M-30 ${50+i*12}C280 ${-200+i*17} 610 ${650-i*12} 1040 ${30+i*13}`}/>)}</>;break;
+    case "scene-horizon":art=<><circle cx="760" cy="110" r="85"/>{[0,1,2,3].map(i=><path key={i} d={`M-20 ${390-i*30}Q170 ${190-i*23} 350 ${340-i*25}T1030 ${230+i*25}`} fill={color} opacity={.1+i*.1}/>)}</>;break;
+    case "scene-lattice":art=<>{Array.from({length:23},(_,i)=><g key={i}><path d={`M${i*50-60} 0Q${500+i*15} 220 ${i*50-60} 426`}/><path d={`M0 ${i*21}Q500 ${i*7-40} 1000 ${i*21}`}/></g>)}</>;break;
+    case "scene-rings":art=<>{Array.from({length:24},(_,i)=><ellipse key={i} cx="800" cy="290" rx={30+i*38} ry={12+i*19}/>)}</>;break;
+    case "mix-library":art=<>{book(100,325,-12)}{book(900,325,12)}<path d="M60 400V150Q60 20 200 20Q340 20 340 150V400M660 400V150Q660 20 800 20Q940 20 940 150V400M0 405H1000"/>{star(500,70,35)}</>;break;
+    case "mix-orchard":art=<>{leaf(85,400,-20)}{leaf(920,290,25)}{[200,500,800].map(x=><g key={x}>{star(x,70,20)}<circle cx={x+60} cy="350" r="25"/></g>)}</>;break;
+    case "mix-abstract":art=<><circle cx="100" cy="100" r="120"/><circle cx="100" cy="100" r="80"/><path d="M690-20L1000 150L810 450L550 300Z"/>{Array.from({length:10},(_,i)=><path key={i} d={`M${600+i*25} 450L${850+i*25} 0`}/>)}{star(350,330,40)}</>;break;
+    case "mix-snow":art=<><path d="M-20 426L190 180L320 335L440 110L700 426L860 220L1040 426M370 235L440 110L520 250L463 225L440 251L410 219"/>{Array.from({length:38},(_,i)=><g key={i}>{star((i*167)%1000,(i*i*37)%230,3+i%5)}</g>)}</>;break;
     case "scene-ridges":
       art = (
         <>

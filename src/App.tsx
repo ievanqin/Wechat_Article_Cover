@@ -27,6 +27,9 @@ function readDraft(): Design {
     const v = data?.version === 2 ? data.design : null;
     if (!v || typeof v !== "object") return INITIAL;
     const d = { ...INITIAL };
+    if(typeof v.autoEyebrow==="boolean")d.autoEyebrow=v.autoEyebrow;
+    if(v.textSizes&&typeof v.textSizes==="object")d.textSizes=Object.fromEntries(Object.entries(v.textSizes).filter(([k,n])=>["subtitle","eyebrow","author","issue","brand","quote","footerText"].includes(k)&&typeof n==="number"&&n>=6&&n<=96)) as Record<string,number>;
+
     if(typeof v.showBackground === "boolean") d.showBackground=v.showBackground;
     if (typeof v.watermarkVisible === "boolean")
       d.watermarkVisible = v.watermarkVisible;
@@ -73,7 +76,7 @@ function readDraft(): Design {
         )
         .slice(0, 24);
     for (const [key, min, max] of [
-      ["titleSize", 32, 96],
+      ["titleSize", 18, 96],
       ["tracking", -2, 12],
       ["artOpacity", 10, 100],
       ["artScale", 60, 140],
@@ -102,6 +105,9 @@ function readDraft(): Design {
         "holo-ticket",
         "soft-capsule",
         "monogram",
+        "glass-ice",
+        "glass-smoke",
+        "glass-clear",
       ].includes(v.brandTheme)
     )
       d.brandTheme = v.brandTheme;
@@ -372,6 +378,8 @@ function App() {
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
   }, [undo, redo]);
+  const [translationStatus,setTranslationStatus]=useState("");
+  useEffect(()=>{if(!d.autoEyebrow||!d.title.trim())return;const controller=new AbortController();const timer=setTimeout(async()=>{try{setTranslationStatus("正在翻译…");const title=d.title.trim();let translated=title;if(/[\u3400-\u9fff]/.test(title)){const response=await fetch("https://api.mymemory.translated.net/get?"+new URLSearchParams({q:title,langpair:"zh-CN|en"}),{signal:controller.signal});const data=await response.json();if(data.responseStatus!==200||!data.responseData?.translatedText)throw Error("translation unavailable");const doc=new DOMParser().parseFromString(data.responseData.translatedText,"text/html");translated=doc.documentElement.textContent||"";}if(!controller.signal.aborted){update({eyebrow:translated.toUpperCase().slice(0,160)});setTranslationStatus("已自动生成英文");}}catch(e){if(!controller.signal.aborted)setTranslationStatus("翻译暂不可用，可手动填写");}},900);return()=>{clearTimeout(timer);controller.abort();};},[d.title,d.autoEyebrow,update]);
   const palette = PALETTES.find((p) => p.id === d.palette) || PALETTES[0];
   const activeLayout = LAYOUTS.find((l) => l.id === d.layout) || LAYOUTS[0];
   const applyFamily = (family: Family) => {
@@ -479,6 +487,7 @@ function App() {
     <label className="field" key={key}>
       <span>
         {label}
+        <input type="number" aria-label={label+"字号"} min={key==="title"?18:6} max="96" value={key==="title"?d.titleSize:d.textSizes[key]??({subtitle:13,eyebrow:9,author:10,brand:14,issue:10,quote:16,footerText:8}[key])} onChange={e=>{const n=Math.max(key==="title"?18:6,Math.min(96,Number(e.target.value)));update(key==="title"?{titleSize:n}:{textSizes:{...d.textSizes,[key]:n}});}}/>
         <small>
           {d[key].length}/{key === "title" ? 80 : 160}
         </small>
@@ -488,13 +497,13 @@ function App() {
           rows={key === "title" ? 3 : 2}
           maxLength={key === "title" ? 80 : 160}
           value={d[key]}
-          onChange={(e) => update({ [key]: e.target.value })}
+          onChange={(e) => update({ [key]: e.target.value,...(key==="eyebrow"?{autoEyebrow:false}:{}) })}
         />
       ) : (
         <input
           maxLength={160}
           value={d[key]}
-          onChange={(e) => update({ [key]: e.target.value })}
+          onChange={(e) => update({ [key]: e.target.value,...(key==="eyebrow"?{autoEyebrow:false}:{}) })}
         />
       )}
     </label>
@@ -615,9 +624,8 @@ function App() {
                     </button>
                   ))}
                 </div>
-                {range("titleSize", "标题字号", 32, 96, "px")}
-                {d.family === "classic" &&
-                  range("subtitleSize", "副标题字号", 12, 28, "px")}
+                <label className="ornament-toggle"><input type="checkbox" checked={d.autoEyebrow} onChange={e=>update({autoEyebrow:e.target.checked})}/>主标题自动翻译为大写英文</label><p className="quiet-note">{translationStatus} · 自动翻译会将主标题发送至 MyMemory；手动编辑眉题会暂停同步。</p>
+
                 {range("tracking", "标题字距", -2, 12, "px")}
                 <div className="section-label">
                   品牌标识
@@ -671,6 +679,9 @@ function App() {
                           ["holo-ticket", "全息票签"],
                           ["soft-capsule", "软胶胶囊"],
                           ["monogram", "几何书章"],
+ ["glass-ice","冰晶透明"],
+ ["glass-smoke","烟灰玻璃"],
+ ["glass-clear","透明描边"],
                         ] as const
                       ).map(([id, name]) => (
                         <button

@@ -14,7 +14,7 @@ export type BrandTheme =
   | "editorial-block"
   | "holo-ticket"
   | "soft-capsule"
-  | "monogram";
+  | "monogram" | "glass-clear" | "glass-smoke" | "glass-ice";
 export function AidouBrandBadge({
   position,
   theme,
@@ -121,6 +121,9 @@ export function AidouBrandBadge({
       title: "brand-new-title",
       sub: "brand-new-sub",
     },
+"glass-clear":{wrapper:"brand-new brand-glass-clear",iconBg:"brand-new-icon",title:"brand-new-title",sub:"brand-new-sub"},
+"glass-smoke":{wrapper:"brand-new brand-glass-smoke",iconBg:"brand-new-icon",title:"brand-new-title",sub:"brand-new-sub"},
+"glass-ice":{wrapper:"brand-new brand-glass-ice",iconBg:"brand-new-icon",title:"brand-new-title",sub:"brand-new-sub"},
     monogram: {
       wrapper: "brand-new brand-monogram",
       iconBg: "brand-new-icon",
