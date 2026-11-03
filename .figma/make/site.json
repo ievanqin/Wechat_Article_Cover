@@ -1,0 +1,12 @@
+{
+  "description": "轻盈的公众号封面编辑器，支持宋韵、科技、杂志等风格，自由构图与高清 PNG 导出。",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  },
+  "title": "封面之间 · 公众号封面工作台",
+  "language": "zh-CN"
+}
