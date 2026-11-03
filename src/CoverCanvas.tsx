@@ -17,7 +17,9 @@ export const CoverCanvas = forwardRef<
   { design: Design; preview?: boolean; onOverflow?: (value: boolean) => void }
 >(function CoverCanvas({ design: d, preview = false, onOverflow }, ref) {
   const copyRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
+    for(const [key,value] of Object.entries(d.textSizes)){const text=String(d[key as keyof Design]||"").trim();if(text)rootRef.current?.querySelectorAll<HTMLElement>(".classic-canvas-scene *").forEach(node=>{if(!node.childElementCount&&node.textContent?.trim()===text)node.style.setProperty("font-size",value+"px","important");});}
     const copy = copyRef.current;
     const title = copy?.querySelector<HTMLElement>(".cover-title");
     for(const [key,selector] of Object.entries({subtitle:".cover-subtitle",eyebrow:".cover-eyebrow",author:".cover-author"})){const node=copy?.querySelector<HTMLElement>(selector);if(node&&d.textSizes[key])node.style.setProperty("font-size",d.textSizes[key]+"px","important");}
@@ -58,7 +60,7 @@ export const CoverCanvas = forwardRef<
       data-fill-mode={d.fillMode}
       data-background-visible={d.showBackground}
       data-decoration-visible={d.showTemplateArt && d.ornament}
-      ref={ref}
+      ref={node=>{rootRef.current=node;if(typeof ref==="function")ref(node);else if(ref)ref.current=node;}}
       id={preview ? undefined : "wechat-cover-canvas"}
       className={`cover-canvas family-${family} composition-${variant} font-${d.font} visual-${d.visualMode} brand-${d.brandPosition} pattern-${bg.pattern} texture-${bg.family}`}
       style={
