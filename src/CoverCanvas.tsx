@@ -45,7 +45,7 @@ export const CoverCanvas = forwardRef<
   const family = d.family;
   const free = d.composition !== "legacy";
   const fill = coverFill(d, p.bg);
-  const classic = !free && layout.family === "classic";
+  const classic = !free && family === "classic" && layout.family === "classic";
   const variant = free
     ? 0
     : layout.variant % (layout.family === "classic" ? 12 : 6);
@@ -53,6 +53,8 @@ export const CoverCanvas = forwardRef<
     <div
       data-composition={d.composition}
       data-fill-mode={d.fillMode}
+      data-background-visible={d.showBackground}
+      data-decoration-visible={d.showTemplateArt && d.ornament}
       ref={ref}
       id={preview ? undefined : "wechat-cover-canvas"}
       className={`cover-canvas family-${family} composition-${variant} font-${d.font} visual-${d.visualMode} brand-${d.brandPosition} pattern-${bg.pattern} texture-${bg.family}`}

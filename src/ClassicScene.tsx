@@ -4634,7 +4634,7 @@ export function ClassicScene({
   );
 
   // 全局公共的背景底图与纹理层：当选择了具体背景模板时，所有 9 款版式统一叠加该底图与肌理
-  const renderGlobalBackdropTexture = () => (
+  const renderGlobalBackdropTexture = () => !d.showBackground ? null : (
     <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
       {effectiveBgImage && (
         <img

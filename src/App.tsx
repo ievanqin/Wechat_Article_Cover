@@ -27,6 +27,7 @@ function readDraft(): Design {
     const v = data?.version === 2 ? data.design : null;
     if (!v || typeof v !== "object") return INITIAL;
     const d = { ...INITIAL };
+    if(typeof v.showBackground === "boolean") d.showBackground=v.showBackground;
     if (typeof v.watermarkVisible === "boolean")
       d.watermarkVisible = v.watermarkVisible;
     if (
@@ -375,7 +376,7 @@ function App() {
   const activeLayout = LAYOUTS.find((l) => l.id === d.layout) || LAYOUTS[0];
   const applyFamily = (family: Family) => {
     const { layout: _layout, ...style } = PRESETS[family];
-    update({ ...style, family, fillMode: "theme", fillColor: "" });
+    update({ ...style, family, background: BACKGROUNDS.find(b=>b.family===family)!.id, showBackground:true, fillMode: "theme", fillColor: "" });
   };
   const toggleMotif = (id: string) => {
     const active = d.elements.includes(id);

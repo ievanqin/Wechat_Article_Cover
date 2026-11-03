@@ -85,6 +85,9 @@ export function LayerPanel({
   );
   return (
     <div className="layer-controls">
+      <div className="bulk-layer-actions"><button onClick={()=>onChange({showBrand:false,ornament:false,showBook:false,showTemplateArt:false,showThemeArtwork:false,showBackground:false,watermarkVisible:false,hiddenElements:[...d.elements]})}>一键隐藏全部</button><button onClick={()=>onChange({showBrand:true,ornament:true,showBook:true,showTemplateArt:true,showThemeArtwork:true,showBackground:true,watermarkVisible:true,hiddenElements:[]})}>显示全部</button></div>
+      <p className="layer-hint">控制装饰图层；正文和底色保留。</p>
+      <div className="layer-section-title">主题与插画</div>
       <div className="current-theme">
         <strong>{FAMILIES.find((f) => f.id === d.family)?.name}</strong>
         <button
@@ -96,31 +99,12 @@ export function LayerPanel({
           {d.showThemeArtwork ? "图形已显示" : "图形已隐藏"}
         </button>
       </div>
-      {d.watermark !== "none" &&
-        row(
-          "背景图案",
-          d.watermarkVisible,
-          () => onChange({ watermarkVisible: !d.watermarkVisible }),
-          "watermark",
-        )}
-      {row(
-        "品牌徽章",
-        d.showBrand,
-        () => onChange({ showBrand: !d.showBrand }),
-        "brand",
-      )}
-      {row(
-        "装帧边框",
-        d.ornament,
-        () => onChange({ ornament: !d.ornament }),
-        "ornament",
-      )}
       {d.family === "classic" && (
         <>
           {row(
             "原版立体书",
-            d.showBook,
-            () => onChange({ showBook: !d.showBook }),
+            d.showBook && d.showThemeArtwork,
+            () => onChange({ showBook: !d.showBook || !d.showThemeArtwork,showThemeArtwork:true }),
             "book",
           )}
           {row(
@@ -162,10 +146,11 @@ export function LayerPanel({
         <div key={id}>
           {row(
             MOTIFS.find((m) => m.id === id)?.name || id,
-            !d.hiddenElements.includes(id),
+            d.showThemeArtwork && !d.hiddenElements.includes(id),
             () =>
               onChange({
-                hiddenElements: d.hiddenElements.includes(id)
+                showThemeArtwork:true,
+                hiddenElements: (!d.showThemeArtwork || d.hiddenElements.includes(id))
                   ? d.hiddenElements.filter((x) => x !== id)
                   : [...d.hiddenElements, id],
               }),
@@ -217,6 +202,24 @@ export function LayerPanel({
       {!d.elements.length && (
         <p className="layer-empty">还没有插画，添加一个喜欢的元素吧。</p>
       )}
+      <div className="layer-section-title">背景与装帧</div>
+      {row("背景纹理",d.showBackground,()=>onChange({showBackground:!d.showBackground}),"background")}
+      {d.watermark !== "none" &&
+        row(
+          "背景图案",
+          d.watermarkVisible,
+          () => onChange({ watermarkVisible: !d.watermarkVisible }),
+          "watermark",
+        )}
+
+      {row(
+        "装帧边框",
+        d.ornament,
+        () => onChange({ ornament: !d.ornament,showTemplateArt:true }),
+        "ornament",
+      )}
+      <div className="layer-section-title">品牌</div>
+      {row("品牌徽章",d.showBrand,()=>onChange({showBrand:!d.showBrand}),"brand")}
       <button className="layer-add" onClick={onAdd}>
         ＋ 添加元素 / 插画
       </button>

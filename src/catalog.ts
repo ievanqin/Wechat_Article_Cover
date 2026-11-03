@@ -1157,6 +1157,7 @@ export interface Design {
   showThemeArtwork: boolean;
   showBook: boolean;
   showTemplateArt: boolean;
+  showBackground: boolean;
   classicBook: string;
   classicElements: Partial<
     Record<"center" | "side" | "sky" | "bottom", string>
@@ -1188,6 +1189,7 @@ export interface Design {
   font: FontId;
 }
 export const INITIAL: Design = {
+ showBackground:true,
   composition: "legacy",
   fillMode: "theme",
   fillColor: "",

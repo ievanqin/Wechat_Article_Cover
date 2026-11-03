@@ -4852,3 +4852,8 @@ body,
   background: #ffffff08;
   border-color: #ffffff26;
 }
+.cover-canvas[data-background-visible="false"]>.cover-background {display:none!important;}
+.cover-canvas[data-decoration-visible="false"]::after,.cover-canvas[data-decoration-visible="false"]>.cover-decoration {display:none!important;}
+.bulk-layer-actions {display:flex;gap:8px;margin-bottom:8px;}
+.bulk-layer-actions button {flex:1;padding:8px;border:1px solid #ffffff26;border-radius:6px;color:#ddd6bf;background:#ffffff08;font-size:11px;}
+.classic-template.template-art-off svg,.classic-template.template-art-off .blur-3xl,.classic-template.template-art-off .blur-2xl {display:none!important;}
