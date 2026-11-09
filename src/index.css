@@ -4870,3 +4870,8 @@ body,
 .cover-canvas .classic-canvas-scene .font-black {font-size:var(--title-size)!important;}
 .cover-canvas .classic-canvas-scene .font-serif-sc.font-medium {font-size:var(--text-subtitle,18px)!important;}
 .cover-canvas .classic-canvas-scene .italic {font-size:var(--text-quote,16px)!important;}
+.gradient-preset-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.gradient-preset-grid button {padding:5px;border:1px solid #ffffff20;border-radius:7px;background:#ffffff04;color:#b6c1cf;text-align:left;}
+.gradient-preset-grid button[aria-pressed="true"] {border-color:#d4c09c;}
+.gradient-preset-grid span {display:block;height:46px;border-radius:4px;}
+.gradient-preset-grid small {display:block;margin:5px 0 1px;font-size:10px;}

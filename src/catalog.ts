@@ -1144,6 +1144,12 @@ export const WATERMARKS = [
 {"id": "mix-orchard", "name": "花枝与星光"},
 {"id": "mix-abstract", "name": "圆环与切片"},
 {"id": "mix-snow", "name": "雪岭与星河"},
+{"id": "mix-shelves", "name": "满墙书架"},
+{"id": "mix-archive", "name": "拱顶藏书阁"},
+{"id": "mix-bookwall", "name": "分格图书墙"},
+{"id": "mix-readingroom", "name": "书架与阅读长桌"},
+{"id": "mix-booksun", "name": "书墙与日轮"},
+{"id": "mix-bookgarden", "name": "书架与藤叶"},
 ] as const;
 export interface Design {
  textSizes: Record<string,number>;
@@ -2340,3 +2346,5 @@ MOTIFS.push(
 );
 
 MOTIFS.push(...[["scholar", "临窗读书书生"], ["lady", "捧卷阅读仕女"], ["minister", "明代文臣 · 张居正式官服"], ["sage", "白须隐士读书"], ["reader", "现代读书青年"], ["poet", "执卷古代诗人"], ["desk", "文房书案与笔砚"], ["palace", "古代宫阙"], ["scroll", "山水古卷"], ["books", "线装古籍书堆"], ["gate", "层叠古典门廊"]].map(([id,name])=>({id:"ancient:"+id,name,category:"center" as const,family:"history" as Family,shape:-8})));
+
+MOTIFS.push(...[["imperial", "重重宫阙全景"], ["citygate", "古城楼与城墙"], ["academy", "群山书院"], ["pagodas", "山河楼阁长卷"]].map(([id,name])=>({id:"ancient:"+id,name,category:"center" as const,family:"history" as Family,shape:-8})));

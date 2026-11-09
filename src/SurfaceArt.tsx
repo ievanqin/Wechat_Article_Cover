@@ -280,26 +280,8 @@ export function InkArt({
         );
       })}
       <path d="M870 325H903V368H870Z" fill="#9b302b" />
-      <text
-        x="887"
-        y="343"
-        fill="#f0dfca"
-        fontSize="11"
-        textAnchor="middle"
-        fontFamily="serif"
-      >
-        墨
-      </text>
-      <text
-        x="887"
-        y="358"
-        fill="#f0dfca"
-        fontSize="11"
-        textAnchor="middle"
-        fontFamily="serif"
-      >
-        韵
-      </text>
+      
+      
     </svg>
   );
 }
@@ -331,6 +313,8 @@ function FullSurface({
   );
   let art;
   switch (kind) {
+    case "mix-shelves":case "mix-archive":case "mix-bookwall":case "mix-readingroom":case "mix-booksun":case "mix-bookgarden":
+      art=<><path d="M15 50H985V395H15ZM15 165H985M15 280H985M15 395H985" strokeWidth="5"/>{Array.from({length:48},(_,i)=>{const x=32+(i%16)*60,y=65+Math.floor(i/16)*115;return <g key={i} transform={`rotate(${i%5===0?-6:0} ${x} ${y+90})`}><rect x={x} y={y+i%3*8} width={22+i%3*8} height={88-i%3*8} rx="2"/><path d={`M${x+5} ${y+20}H${x+18}M${x+5} ${y+29}H${x+18}`}/></g>})}{kind==="mix-archive"&&<path d="M300 395V145Q500-60 700 145V395" strokeWidth="8"/>}{kind==="mix-readingroom"&&<path d="M330 335H680V350H330M355 350V420M655 350V420" strokeWidth="9"/>}{kind==="mix-booksun"&&<circle cx="500" cy="75" r="65"/>}{kind==="mix-bookgarden"&&<>{leaf(90,380,-20)}{leaf(910,380,20)}</>}{kind==="mix-bookwall"&&<path d="M500 50V395M255 50V395M745 50V395" strokeWidth="8"/>}</>;break;
     case "scene-silk": art=<>{Array.from({length:28},(_,i)=><path key={i} d={`M-30 ${50+i*12}C280 ${-200+i*17} 610 ${650-i*12} 1040 ${30+i*13}`}/>)}</>;break;
     case "scene-horizon":art=<><circle cx="760" cy="110" r="85"/>{[0,1,2,3].map(i=><path key={i} d={`M-20 ${390-i*30}Q170 ${190-i*23} 350 ${340-i*25}T1030 ${230+i*25}`} fill={color} opacity={.1+i*.1}/>)}</>;break;
     case "scene-lattice":art=<>{Array.from({length:23},(_,i)=><g key={i}><path d={`M${i*50-60} 0Q${500+i*15} 220 ${i*50-60} 426`}/><path d={`M0 ${i*21}Q500 ${i*7-40} 1000 ${i*21}`}/></g>)}</>;break;
