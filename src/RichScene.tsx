@@ -1,3 +1,5 @@
+import { AncientArt } from "./AncientArt";
+import { DARK_ANCIENT_SCENES } from "./catalog";
 import { InkArt } from "./SurfaceArt";
 import { VirtualArt } from "./VirtualArt";
 import { EXPERIMENTAL_ART } from "./catalog";
@@ -55,6 +57,8 @@ export function RichScene({
     ceramicwave: "ceramic-surf",
     cosmicportal: "cosmic-gateway",
   };
+  const ancient=DARK_ANCIENT_SCENES[originalFamily as keyof typeof DARK_ANCIENT_SCENES];
+  if(ancient)return <AncientArt kind={ancient} accent={accent} thumbnail={thumbnail}/>;
   if (originalFamily === "inkburst" || originalFamily === "inkflow")
     return <InkArt kind={originalFamily} thumbnail={thumbnail} />;
   if (virtualKind)

@@ -379,6 +379,7 @@ function App() {
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
   }, [undo, redo]);
+  const [colorTarget,setColorTarget]=useState<"base"|"gradient">("base");
   const [gradientGroup,setGradientGroup]=useState("深色");
   const [translationStatus,setTranslationStatus]=useState("");
   useEffect(()=>{if(!d.autoEyebrow||!d.title.trim())return;const controller=new AbortController();const timer=setTimeout(async()=>{try{setTranslationStatus("正在翻译…");const title=d.title.trim();let translated=title;if(/[\u3400-\u9fff]/.test(title)){const response=await fetch("https://api.mymemory.translated.net/get?"+new URLSearchParams({q:title,langpair:"zh-CN|en"}),{signal:controller.signal});const data=await response.json();if(data.responseStatus!==200||!data.responseData?.translatedText)throw Error("translation unavailable");const doc=new DOMParser().parseFromString(data.responseData.translatedText,"text/html");translated=doc.documentElement.textContent||"";}if(!controller.signal.aborted){update({eyebrow:translated.toUpperCase().slice(0,160)});setTranslationStatus("已自动生成英文");}}catch(e){if(!controller.signal.aborted)setTranslationStatus("翻译暂不可用，可手动填写");}},900);return()=>{clearTimeout(timer);controller.abort();};},[d.title,d.autoEyebrow,update]);
@@ -982,11 +983,14 @@ function App() {
                   ))}
                 </div>
                 {!["solid","theme"].includes(d.fillMode)&&<><div className="section-label">一键渐变搭配<span>同时设置两种颜色</span></div><div className="composition-filters" aria-label="渐变配色分类">{["深色","浅色","山海","霓虹","暖色","书卷"].map(g=><button key={g} aria-pressed={gradientGroup===g} onClick={()=>setGradientGroup(g)}>{g}</button>)}</div><div className="gradient-preset-grid">{GRADIENT_PRESETS.filter(g=>g.group===gradientGroup).map(g=><button key={g.name} aria-label={g.name+"渐变"} aria-pressed={d.fillColor===g.start&&d.gradientColor===g.end} onClick={()=>update({fillColor:g.start,gradientColor:g.end,palette:["浅色","书卷"].includes(g.group)?"new-0":"new-12"})}><span style={{background:`linear-gradient(${d.gradientAngle}deg,${g.start},${g.end})`}}/><small>{g.name}</small></button>)}</div><div className="quiet-note">选一张配色卡即可同时应用两种颜色；下方可继续自定义。</div></>}
+                <div className="composition-filters color-targets" aria-label="配色作用位置"><button aria-pressed={colorTarget==="base"||["solid","theme"].includes(d.fillMode)} onClick={()=>setColorTarget("base")}>选择底色</button>{!["solid","theme"].includes(d.fillMode)&&<><button aria-pressed={colorTarget==="gradient"} onClick={()=>setColorTarget("gradient")}>选择渐变颜色</button><button onClick={()=>update({fillColor:d.gradientColor,gradientColor:d.fillColor||palette.bg})}>交换两色 ⇄</button></>}</div>
+                <div className="quiet-note">下面的色卡将应用到{colorTarget==="gradient"&&!["solid","theme"].includes(d.fillMode)?"渐变颜色":"底色"}，其它颜色保持不变。</div>
                 <div className="fill-colors">
                   <label>
                     底色
                     <input
                       aria-label="底色"
+                      onFocus={()=>setColorTarget("base")} onPointerDown={()=>setColorTarget("base")}
                       type="color"
                       value={d.fillColor || palette.bg}
                       onChange={(e) =>
@@ -1003,6 +1007,7 @@ function App() {
                       渐变颜色
                       <input
                         aria-label="渐变颜色"
+                        onFocus={()=>setColorTarget("gradient")} onPointerDown={()=>setColorTarget("gradient")}
                         type="color"
                         value={d.gradientColor}
                         onChange={(e) =>
@@ -1065,14 +1070,14 @@ function App() {
                       key={p.id}
                       aria-label={p.name}
                       title={p.name}
-                      aria-pressed={d.palette === p.id}
-                      className={d.palette === p.id ? "selected" : ""}
-                      onClick={() => update({ palette: p.id, fillColor: "" })}
+                      aria-pressed={(colorTarget==="gradient"&&!["solid","theme"].includes(d.fillMode)?d.gradientColor:d.fillColor||palette.bg)===p.bg}
+                      className={(colorTarget==="gradient"&&!["solid","theme"].includes(d.fillMode)?d.gradientColor:d.fillColor||palette.bg)===p.bg?"selected":""}
+                      onClick={() => update(colorTarget==="gradient"&&!["solid","theme"].includes(d.fillMode)?{gradientColor:p.bg}:{fillColor:p.bg,fillMode:d.fillMode==="theme"?"solid":d.fillMode})}
                     >
                       <span style={{ background: p.bg, color: p.ink }}>
                         <b>Aa</b>
                         <i style={{ background: p.accent }} />
-                        {d.palette === p.id && <em>✓</em>}
+                        {(colorTarget==="gradient"&&!["solid","theme"].includes(d.fillMode)?d.gradientColor:d.fillColor||palette.bg)===p.bg&&<em>✓</em>}
                       </span>
                       <small>{p.name}</small>
                     </button>

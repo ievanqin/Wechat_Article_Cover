@@ -517,6 +517,12 @@ export const FAMILIES = [
     desc: "旋转玻璃花瓣与悬浮核心",
     color: "#071f25",
   },
+{"id": "imperialnight", "name": "玄金宫阙", "en": "IMPERIALNIGHT", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#101723"},
+{"id": "academynight", "name": "夜雨书院", "en": "ACADEMYNIGHT", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#10282b"},
+{"id": "inkmountnight", "name": "墨青山河", "en": "INKMOUNTNIGHT", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#14252c"},
+{"id": "moonpavilion", "name": "月下楼阁", "en": "MOONPAVILION", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#1b1931"},
+{"id": "changannight", "name": "朱砂长安", "en": "CHANGANNIGHT", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#2c1620"},
+{"id": "bronzescroll", "name": "青铜古卷", "en": "BRONZESCROLL", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#182724"},
 ] as const;
 export type Family = (typeof FAMILIES)[number]["id"];
 export type Palette = {
@@ -616,6 +622,12 @@ const newColors: [string, string, string, string, Family][] = [
   ["全息切片", "#0b192f", "#f2f7ff", "#b9fff5", "holostack"],
   ["光谱之门", "#1a1331", "#f2f7ff", "#dfc1ff", "spectraldoor"],
   ["琉璃花舱", "#071f25", "#f2f7ff", "#b2efe1", "glassbloom"],
+["玄金宫阙", "#101723", "#f1e8d4", "#d9b775", "imperialnight"],
+["夜雨书院", "#10282b", "#f1e8d4", "#a7c3ad", "academynight"],
+["墨青山河", "#14252c", "#f1e8d4", "#9db8b9", "inkmountnight"],
+["月下楼阁", "#1b1931", "#f1e8d4", "#c8bbde", "moonpavilion"],
+["朱砂长安", "#2c1620", "#f1e8d4", "#e2b18a", "changannight"],
+["青铜古卷", "#182724", "#f1e8d4", "#b7b47f", "bronzescroll"],
 ];
 export const PALETTES: Palette[] = [
   ...newColors.map(([name, bg, ink, accent, family], i) => ({
@@ -638,6 +650,13 @@ export const PALETTES: Palette[] = [
   })),
 ];
 const names: Record<Family, string[]> = {
+imperialnight:["玄金宫阙 · 侧场", "玄金宫阙 · 对开", "玄金宫阙 · 中轴"],
+academynight:["夜雨书院 · 侧场", "夜雨书院 · 对开", "夜雨书院 · 中轴"],
+inkmountnight:["墨青山河 · 侧场", "墨青山河 · 对开", "墨青山河 · 中轴"],
+moonpavilion:["月下楼阁 · 侧场", "月下楼阁 · 对开", "月下楼阁 · 中轴"],
+changannight:["朱砂长安 · 侧场", "朱砂长安 · 对开", "朱砂长安 · 中轴"],
+bronzescroll:["青铜古卷 · 侧场", "青铜古卷 · 对开", "青铜古卷 · 中轴"],
+
   wavefold: ["声波褶幕 · 侧场", "声波褶幕 · 对开", "声波褶幕 · 中轴"],
   torusfield: ["环面磁场 · 侧场", "环面磁场 · 对开", "环面磁场 · 中轴"],
   silkhelix: ["丝带螺旋 · 侧场", "丝带螺旋 · 对开", "丝带螺旋 · 中轴"],
@@ -1256,6 +1275,13 @@ export const INITIAL: Design = {
   font: "serif",
 };
 export const PRESETS: Record<Family, Partial<Design>> = {
+imperialnight:{palette:PALETTES.find(p=>p.family==="imperialnight")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
+academynight:{palette:PALETTES.find(p=>p.family==="academynight")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
+inkmountnight:{palette:PALETTES.find(p=>p.family==="inkmountnight")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
+moonpavilion:{palette:PALETTES.find(p=>p.family==="moonpavilion")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
+changannight:{palette:PALETTES.find(p=>p.family==="changannight")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
+bronzescroll:{palette:PALETTES.find(p=>p.family==="bronzescroll")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
+
   wavefold: {
     palette: PALETTES.find((p) => p.family === "wavefold")!.id,
     visualMode: "painted",
@@ -2051,6 +2077,8 @@ MOTIFS.push(
   })),
 );
 export const THEME_GROUPS = [
+{id:"dark-oriental",name:"深色古风",families:["imperialnight", "academynight", "inkmountnight", "moonpavilion", "changannight", "bronzescroll", "history", "song", "libraryhall"]},
+
   {
     id: "parametric-series",
     name: "参数曲面",
@@ -2226,7 +2254,7 @@ export const THEME_GROUPS = [
   {
     id: "oriental",
     name: "国风水墨",
-    families: [
+    families: ["imperialnight","academynight","inkmountnight","moonpavilion","changannight","bronzescroll",
       "inkburst",
       "inkflow",
       "song",
@@ -2348,3 +2376,5 @@ MOTIFS.push(
 MOTIFS.push(...[["scholar", "临窗读书书生"], ["lady", "捧卷阅读仕女"], ["minister", "明代文臣 · 张居正式官服"], ["sage", "白须隐士读书"], ["reader", "现代读书青年"], ["poet", "执卷古代诗人"], ["desk", "文房书案与笔砚"], ["palace", "古代宫阙"], ["scroll", "山水古卷"], ["books", "线装古籍书堆"], ["gate", "层叠古典门廊"]].map(([id,name])=>({id:"ancient:"+id,name,category:"center" as const,family:"history" as Family,shape:-8})));
 
 MOTIFS.push(...[["imperial", "重重宫阙全景"], ["citygate", "古城楼与城墙"], ["academy", "群山书院"], ["pagodas", "山河楼阁长卷"]].map(([id,name])=>({id:"ancient:"+id,name,category:"center" as const,family:"history" as Family,shape:-8})));
+
+export const DARK_ANCIENT_SCENES = {"imperialnight": "imperial", "academynight": "academy", "inkmountnight": "pagodas", "moonpavilion": "palace", "changannight": "citygate", "bronzescroll": "scroll"};
