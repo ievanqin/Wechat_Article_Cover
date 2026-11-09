@@ -2338,3 +2338,5 @@ MOTIFS.push(
     shape: -6,
   })),
 );
+
+MOTIFS.push(...[["scholar", "临窗读书书生"], ["lady", "捧卷阅读仕女"], ["minister", "明代文臣 · 张居正式官服"], ["sage", "白须隐士读书"], ["reader", "现代读书青年"], ["poet", "执卷古代诗人"], ["desk", "文房书案与笔砚"], ["palace", "古代宫阙"], ["scroll", "山水古卷"], ["books", "线装古籍书堆"], ["gate", "层叠古典门廊"]].map(([id,name])=>({id:"ancient:"+id,name,category:"center" as const,family:"history" as Family,shape:-8})));

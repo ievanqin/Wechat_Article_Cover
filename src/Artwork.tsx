@@ -1,3 +1,4 @@
+import { AncientArt } from "./AncientArt";
 import { InkArt } from "./SurfaceArt";
 import { VirtualArt } from "./VirtualArt";
 import { LandscapeArt } from "./LandscapeArt";
@@ -162,6 +163,7 @@ export function MotifArt({
       </svg>
     );
   }
+  if(id.startsWith("ancient:")) return <AncientArt kind={id.slice(8)} accent={color} thumbnail={thumbnail}/>;
   if (id.startsWith("ink:"))
     return <InkArt kind={id.slice(4)} thumbnail={thumbnail} />;
   if (id.startsWith("virtual:"))
