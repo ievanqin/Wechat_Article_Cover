@@ -279,7 +279,7 @@ export function InkArt({
           />
         );
       })}
-      <path d="M870 325H903V368H870Z" fill="#9b302b" />
+
       
       
     </svg>
