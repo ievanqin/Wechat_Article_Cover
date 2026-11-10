@@ -4875,3 +4875,4 @@ body,
 .gradient-preset-grid button[aria-pressed="true"] {border-color:#d4c09c;}
 .gradient-preset-grid span {display:block;height:46px;border-radius:4px;}
 .gradient-preset-grid small {display:block;margin:5px 0 1px;font-size:10px;}
+.art-center-normalizer {position:absolute;inset:0;pointer-events:none;}

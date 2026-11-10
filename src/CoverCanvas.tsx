@@ -4,6 +4,7 @@ import { ClassicScene, ClassicMotif } from "./ClassicScene";
 import { RichScene } from "./RichScene";
 import { forwardRef, useLayoutEffect, useRef } from "react";
 import {
+  COMPOSITIONS,
   BACKGROUNDS,
   FAMILIES,
   LAYOUTS,
@@ -44,6 +45,24 @@ export const CoverCanvas = forwardRef<
         (d.layout === "song-0" && title.scrollHeight > title.clientHeight + 6),
     );
   }, [d, onOverflow]);
+  useLayoutEffect(()=>{
+    const root=rootRef.current;if(!root)return;
+    const centered=COMPOSITIONS.some(c=>c.id===d.composition&&c.group==="居中");
+    root.querySelectorAll<HTMLElement>(".art-center-normalizer").forEach(node=>{
+      node.style.transform="none";
+      if(!centered)return;
+      const layer=node.parentElement!;const width=layer.getBoundingClientRect().width;if(!width)return;
+      const points:DOMPoint[]=[];
+      node.querySelectorAll<SVGSVGElement>("svg").forEach(svg=>{if(svg.parentElement?.closest("svg"))return;try{const b=svg.getBBox(),m=svg.getScreenCTM();if(!m||!b.width)return;for(const [x,y] of [[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]])points.push(new DOMPoint(x,y).matrixTransform(m));}catch{/* Invisible SVGs can have no measurable geometry. */}});
+      if(!points.length)return;
+      const left=Math.min(...points.map(p=>p.x)),right=Math.max(...points.map(p=>p.x));
+      const box=root.getBoundingClientRect();const id=layer.dataset.layerId||"";
+      const scale=(d.layerTransforms[id]?.scale||100)/100;
+      const parentScale=width/1000/scale;
+      const target=box.left+box.width/2+(d.layerTransforms[id]?.x||0)*parentScale;
+      node.style.transform=`translateX(${(target-(left+right)/2)/(width/1000)}px)`;
+    });
+  },[d]);
   const p = PALETTES.find((p) => p.id === d.palette) || PALETTES[0];
   const layout = LAYOUTS.find((l) => l.id === d.layout) || LAYOUTS[0];
   const bg = BACKGROUNDS.find((b) => b.id === d.background) || BACKGROUNDS[0];
@@ -159,6 +178,7 @@ export const CoverCanvas = forwardRef<
                   transformOrigin: "80% 50%",
                 }}
               >
+                <div className="art-center-normalizer">
                 {id.startsWith("original:") ? (
                   <ClassicMotif
                     id={id}
@@ -167,6 +187,7 @@ export const CoverCanvas = forwardRef<
                 ) : (
                   <MotifArt id={id} color={p.accent} mode={d.visualMode} />
                 )}
+                </div>
               </div>
             ))}
         </div>
