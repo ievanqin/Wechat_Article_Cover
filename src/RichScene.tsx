@@ -1,3 +1,5 @@
+import { BrainArt } from "./BrainArt";
+import { BRAIN_SCENES } from "./catalog";
 import { AncientArt } from "./AncientArt";
 import { DARK_ANCIENT_SCENES } from "./catalog";
 import { InkArt } from "./SurfaceArt";
@@ -57,6 +59,8 @@ export function RichScene({
     ceramicwave: "ceramic-surf",
     cosmicportal: "cosmic-gateway",
   };
+  const brain=BRAIN_SCENES[originalFamily as keyof typeof BRAIN_SCENES];
+  if(brain)return <BrainArt kind={brain} accent={accent} thumbnail={thumbnail}/>;
   const ancient=DARK_ANCIENT_SCENES[originalFamily as keyof typeof DARK_ANCIENT_SCENES];
   if(ancient)return <AncientArt kind={ancient} accent={accent} thumbnail={thumbnail}/>;
   if (originalFamily === "inkburst" || originalFamily === "inkflow")

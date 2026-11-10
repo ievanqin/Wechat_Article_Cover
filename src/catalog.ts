@@ -523,6 +523,11 @@ export const FAMILIES = [
 {"id": "moonpavilion", "name": "月下楼阁", "en": "MOONPAVILION", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#1b1931"},
 {"id": "changannight", "name": "朱砂长安", "en": "CHANGANNIGHT", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#2c1620"},
 {"id": "bronzescroll", "name": "青铜古卷", "en": "BRONZESCROLL", "desc": "深色古风 · 宫阙、书院与山河意象", "color": "#182724"},
+{"id": "brainholo", "name": "全息脑体", "en": "BRAINHOLO", "desc": "未来大脑 · 神经连接与意识空间", "color": "#09152c"},
+{"id": "brainnetwork", "name": "神经星图", "en": "BRAINNETWORK", "desc": "未来大脑 · 神经连接与意识空间", "color": "#101227"},
+{"id": "brainchrome", "name": "液态脑核", "en": "BRAINCHROME", "desc": "未来大脑 · 神经连接与意识空间", "color": "#151d29"},
+{"id": "brainwave", "name": "霓虹脑波", "en": "BRAINWAVE", "desc": "未来大脑 · 神经连接与意识空间", "color": "#24122e"},
+{"id": "brainquantum", "name": "量子意识", "en": "BRAINQUANTUM", "desc": "未来大脑 · 神经连接与意识空间", "color": "#0a2529"},
 ] as const;
 export type Family = (typeof FAMILIES)[number]["id"];
 export type Palette = {
@@ -628,6 +633,11 @@ const newColors: [string, string, string, string, Family][] = [
 ["月下楼阁", "#1b1931", "#f1e8d4", "#c8bbde", "moonpavilion"],
 ["朱砂长安", "#2c1620", "#f1e8d4", "#e2b18a", "changannight"],
 ["青铜古卷", "#182724", "#f1e8d4", "#b7b47f", "bronzescroll"],
+["全息脑体", "#09152c", "#eff6ff", "#8df4ec", "brainholo"],
+["神经星图", "#101227", "#eff6ff", "#b7a4ff", "brainnetwork"],
+["液态脑核", "#151d29", "#eff6ff", "#b9d3ee", "brainchrome"],
+["霓虹脑波", "#24122e", "#eff6ff", "#f3a8e8", "brainwave"],
+["量子意识", "#0a2529", "#eff6ff", "#90e5cf", "brainquantum"],
 ];
 export const PALETTES: Palette[] = [
   ...newColors.map(([name, bg, ink, accent, family], i) => ({
@@ -650,6 +660,12 @@ export const PALETTES: Palette[] = [
   })),
 ];
 const names: Record<Family, string[]> = {
+brainholo:["全息脑体 · 侧场", "全息脑体 · 对开", "全息脑体 · 中轴"],
+brainnetwork:["神经星图 · 侧场", "神经星图 · 对开", "神经星图 · 中轴"],
+brainchrome:["液态脑核 · 侧场", "液态脑核 · 对开", "液态脑核 · 中轴"],
+brainwave:["霓虹脑波 · 侧场", "霓虹脑波 · 对开", "霓虹脑波 · 中轴"],
+brainquantum:["量子意识 · 侧场", "量子意识 · 对开", "量子意识 · 中轴"],
+
 imperialnight:["玄金宫阙 · 侧场", "玄金宫阙 · 对开", "玄金宫阙 · 中轴"],
 academynight:["夜雨书院 · 侧场", "夜雨书院 · 对开", "夜雨书院 · 中轴"],
 inkmountnight:["墨青山河 · 侧场", "墨青山河 · 对开", "墨青山河 · 中轴"],
@@ -1275,6 +1291,12 @@ export const INITIAL: Design = {
   font: "serif",
 };
 export const PRESETS: Record<Family, Partial<Design>> = {
+brainholo:{palette:PALETTES.find(p=>p.family==="brainholo")!.id,font:"sans",visualMode:"painted",artOpacity:100,ornament:false},
+brainnetwork:{palette:PALETTES.find(p=>p.family==="brainnetwork")!.id,font:"sans",visualMode:"painted",artOpacity:100,ornament:false},
+brainchrome:{palette:PALETTES.find(p=>p.family==="brainchrome")!.id,font:"sans",visualMode:"painted",artOpacity:100,ornament:false},
+brainwave:{palette:PALETTES.find(p=>p.family==="brainwave")!.id,font:"sans",visualMode:"painted",artOpacity:100,ornament:false},
+brainquantum:{palette:PALETTES.find(p=>p.family==="brainquantum")!.id,font:"sans",visualMode:"painted",artOpacity:100,ornament:false},
+
 imperialnight:{palette:PALETTES.find(p=>p.family==="imperialnight")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
 academynight:{palette:PALETTES.find(p=>p.family==="academynight")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
 inkmountnight:{palette:PALETTES.find(p=>p.family==="inkmountnight")!.id,font:"serif",visualMode:"painted",artOpacity:95,ornament:true},
@@ -2077,6 +2099,8 @@ MOTIFS.push(
   })),
 );
 export const THEME_GROUPS = [
+{id:"brain-series",name:"大脑与意识",families:["brainholo", "brainnetwork", "brainchrome", "brainwave", "brainquantum", "mind", "aicore"]},
+
 {id:"dark-oriental",name:"深色古风",families:["imperialnight", "academynight", "inkmountnight", "moonpavilion", "changannight", "bronzescroll", "history", "song", "libraryhall"]},
 
   {
@@ -2378,3 +2402,6 @@ MOTIFS.push(...[["scholar", "临窗读书书生"], ["lady", "捧卷阅读仕女"
 MOTIFS.push(...[["imperial", "重重宫阙全景"], ["citygate", "古城楼与城墙"], ["academy", "群山书院"], ["pagodas", "山河楼阁长卷"]].map(([id,name])=>({id:"ancient:"+id,name,category:"center" as const,family:"history" as Family,shape:-8})));
 
 export const DARK_ANCIENT_SCENES = {"imperialnight": "imperial", "academynight": "academy", "inkmountnight": "pagodas", "moonpavilion": "palace", "changannight": "citygate", "bronzescroll": "scroll"};
+
+export const BRAIN_SCENES={"brainholo": "holo", "brainnetwork": "network", "brainchrome": "chrome", "brainwave": "wave", "brainquantum": "quantum"};
+MOTIFS.push(...[["holo", "全息脑体 · 独立大脑", "brainholo"], ["network", "神经星图 · 独立大脑", "brainnetwork"], ["chrome", "液态脑核 · 独立大脑", "brainchrome"], ["wave", "霓虹脑波 · 独立大脑", "brainwave"], ["quantum", "量子意识 · 独立大脑", "brainquantum"]].map(([id,name,family])=>({id:"brain:"+id,name,category:"center" as const,family:family as Family,shape:-9})));

@@ -1,3 +1,4 @@
+import { BrainArt } from "./BrainArt";
 import { AncientArt } from "./AncientArt";
 import { InkArt } from "./SurfaceArt";
 import { VirtualArt } from "./VirtualArt";
@@ -163,6 +164,7 @@ export function MotifArt({
       </svg>
     );
   }
+  if(id.startsWith("brain:")) return <BrainArt kind={id.slice(6)} accent={color} thumbnail={thumbnail}/>;
   if(id.startsWith("ancient:")) return <AncientArt kind={id.slice(8)} accent={color} thumbnail={thumbnail}/>;
   if (id.startsWith("ink:"))
     return <InkArt kind={id.slice(4)} thumbnail={thumbnail} />;

@@ -445,7 +445,7 @@ function App() {
   }
   const matchesAsset = (m: (typeof MOTIFS)[number]) =>
     assetGroup === "all" ||
-    (assetGroup==="ancient"?m.id.startsWith("ancient:"):assetGroup === "3d"
+    (assetGroup==="brain"?m.id.startsWith("brain:")||/脑|神经|意识/.test(m.name):assetGroup==="ancient"?m.id.startsWith("ancient:"):assetGroup === "3d"
       ? m.id.startsWith("virtual:") ||
         m.id.startsWith("sculpt:") ||
         [
@@ -1252,7 +1252,7 @@ function App() {
                     <option value="landscape">山水、水墨与雪山</option>
                     <option value="books">图书与图书馆</option>
                     <option value="space">科幻与太空</option>
-                    <option value="ancient">读书人物与古代主体</option><option value="classic">原版经典</option>
+                    <option value="brain">大脑与意识</option><option value="ancient">读书人物与古代主体</option><option value="classic">原版经典</option>
                     <option value="emoji">Emoji</option>
                   </select>
                 </label>
